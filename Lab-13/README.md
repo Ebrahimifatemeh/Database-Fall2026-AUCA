@@ -34,3 +34,70 @@ This lab is based on the course material "13) Aggregate Functions."
 
 ```bash
 psql -d your_practice_database -f lab13.sql
+Important Concepts
+COUNT()
+
+Counts records in a table.
+
+COUNT(*) counts all rows.
+COUNT(column) counts non-NULL values.
+COUNT(DISTINCT column) counts unique non-NULL values.
+SUM()
+
+Calculates the total of numeric values.
+
+AVG()
+
+Calculates the average of numeric values.
+
+MIN() and MAX()
+
+Find the smallest and largest values.
+
+GROUP BY
+
+Groups rows that share common values, allowing aggregate calculations for each group.
+
+HAVING
+
+Filters grouped results after aggregation.
+
+Unlike HAVING, WHERE filters individual rows before grouping.
+
+STRING_AGG()
+
+Combines multiple text values into a single string.
+
+ARRAY_AGG()
+
+Collects multiple values into an array.
+
+Statistical Functions
+
+STDDEV(), VARIANCE(), and CORR() help analyze statistical relationships in data.
+
+Window Functions
+
+Window functions calculate values across related rows without collapsing individual records.
+
+Important Notes
+The SQL script uses a separate lab13 schema.
+Re-running the script recreates five sample tables.
+The script should be executed in a practice database.
+The product review example uses a minimum of two reviews to demonstrate HAVING with the sample dataset.
+Learning Outcomes
+
+Through this lab, I practiced:
+
+Using aggregate functions to summarize data.
+Counting and analyzing records.
+Calculating totals, averages, minimums, and maximums.
+Grouping records using GROUP BY.
+Filtering grouped results using HAVING.
+Working with NULL values.
+Applying statistical aggregate functions.
+Comparing aggregate functions with window functions.
+Performing conditional aggregation and percentage calculations.
+Conclusion
+
+This lab helped me understand how aggregate functions are used in PostgreSQL to analyze and summarize data. I learned how to combine aggregate functions with GROUP BY and HAVING to generate meaningful results from database tables.
