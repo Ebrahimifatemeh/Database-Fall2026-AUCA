@@ -1,0 +1,309 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql'
+-- Lab 12: Querying Data
+-- Student: Fatemeh Ebrahimi
+-- PostgreSQL / psql. Safe to rerun; only lab12_ tables are replaced.
+\encoding UTF8
+\pset pager off
+Pager usage is off.
+\echo 'LAB 12 - QUERYING DATA'
+LAB 12 - QUERYING DATA
+DROP TABLE IF EXISTS lab12_sales, lab12_users, lab12_customers, lab12_products, lab12_employees CASCADE;
+psql:C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab12_sales" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab12_users" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab12_customers" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab12_products" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_lab12_Submission/Fatemeh_Lab12_Querying_Data.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab12_employees" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+CREATE TABLE lab12_employees (
+ id SERIAL PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ department VARCHAR(50) NOT NULL,
+ department_id INTEGER NOT NULL,
+ salary NUMERIC(10,2) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab12_products (
+ product_id SERIAL PRIMARY KEY,
+ product_name VARCHAR(100) NOT NULL,
+ price NUMERIC(8,2) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab12_customers (
+ customer_id SERIAL PRIMARY KEY,
+ customer_name VARCHAR(100) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab12_users (
+ user_id SERIAL PRIMARY KEY,
+ email VARCHAR(100)
+);
+CREATE TABLE
+CREATE TABLE lab12_sales (
+ sale_id SERIAL PRIMARY KEY,
+ employee_id INTEGER NOT NULL REFERENCES lab12_employees(id),
+ amount NUMERIC(10,2) NOT NULL
+);
+CREATE TABLE
+INSERT INTO lab12_employees(name,department,department_id,salary) VALUES
+ ('Fatemeh Ebrahimi','Engineering',3,92000),
+ ('Amina Rahimi','Sales',5,68000),
+ ('Sara Ahmadi','Engineering',3,112000),
+ ('Bilal Karimi','Marketing',7,54000),
+ ('Ahmad Safi','Sales',5,79000),
+ ('Maryam Nazari','Engineering',3,72000),
+ ('Brandon Lee','Support',9,58000);
+INSERT 0 7
+INSERT INTO lab12_products(product_name,price) VALUES
+ ('Notebook',12.50),('Blueberry',5.99),('Strawberry',4.75),('Keyboard',35.00),('Mouse',24.50),('Monitor',199.99);
+INSERT 0 6
+INSERT INTO lab12_customers(customer_name) VALUES
+ ('Brad Smith'),('Brandon Davis'),('Fatemeh Ebrahimi'),('Amina Rahimi');
+INSERT 0 4
+INSERT INTO lab12_users(email) VALUES
+ ('fatemeh@gmail.com'),('amina@auca.kg'),('SARA@GMAIL.COM'),('invalid-email'),(NULL);
+INSERT 0 5
+INSERT INTO lab12_sales(employee_id,amount) VALUES
+ (1,1500),(2,850),(3,2100),(5,1200),(6,400),(1,600);
+INSERT 0 6
+\echo '1. SELECT statements and aliases'
+1. SELECT statements and aliases
+SELECT * FROM lab12_employees ORDER BY id;
+ id |       name       | department  | department_id |  salary
+----+------------------+-------------+---------------+-----------
+  1 | Fatemeh Ebrahimi | Engineering |             3 |  92000.00
+  2 | Amina Rahimi     | Sales       |             5 |  68000.00
+  3 | Sara Ahmadi      | Engineering |             3 | 112000.00
+  4 | Bilal Karimi     | Marketing   |             7 |  54000.00
+  5 | Ahmad Safi       | Sales       |             5 |  79000.00
+  6 | Maryam Nazari    | Engineering |             3 |  72000.00
+  7 | Brandon Lee      | Support     |             9 |  58000.00
+(7 rows)
+
+SELECT name, department FROM lab12_employees ORDER BY id;
+       name       | department
+------------------+-------------
+ Fatemeh Ebrahimi | Engineering
+ Amina Rahimi     | Sales
+ Sara Ahmadi      | Engineering
+ Bilal Karimi     | Marketing
+ Ahmad Safi       | Sales
+ Maryam Nazari    | Engineering
+ Brandon Lee      | Support
+(7 rows)
+
+SELECT name, salary, salary * 0.10 AS potential_bonus FROM lab12_employees ORDER BY id;
+       name       |  salary   | potential_bonus
+------------------+-----------+-----------------
+ Fatemeh Ebrahimi |  92000.00 |       9200.0000
+ Amina Rahimi     |  68000.00 |       6800.0000
+ Sara Ahmadi      | 112000.00 |      11200.0000
+ Bilal Karimi     |  54000.00 |       5400.0000
+ Ahmad Safi       |  79000.00 |       7900.0000
+ Maryam Nazari    |  72000.00 |       7200.0000
+ Brandon Lee      |  58000.00 |       5800.0000
+(7 rows)
+
+\echo '2. WHERE: comparison, AND, OR, NOT, BETWEEN, NULL'
+2. WHERE: comparison, AND, OR, NOT, BETWEEN, NULL
+SELECT name, salary FROM lab12_employees WHERE department='Sales';
+     name     |  salary
+--------------+----------
+ Amina Rahimi | 68000.00
+ Ahmad Safi   | 79000.00
+(2 rows)
+
+SELECT name FROM lab12_employees WHERE salary > 75000 AND department='Engineering';
+       name
+------------------
+ Fatemeh Ebrahimi
+ Sara Ahmadi
+(2 rows)
+
+SELECT name, department FROM lab12_employees WHERE department='Sales' OR department='Marketing';
+     name     | department
+--------------+------------
+ Amina Rahimi | Sales
+ Bilal Karimi | Marketing
+ Ahmad Safi   | Sales
+(3 rows)
+
+SELECT name FROM lab12_employees WHERE NOT department='Sales';
+       name
+------------------
+ Fatemeh Ebrahimi
+ Sara Ahmadi
+ Bilal Karimi
+ Maryam Nazari
+ Brandon Lee
+(5 rows)
+
+SELECT product_name,price FROM lab12_products WHERE price BETWEEN 20 AND 50;
+ product_name | price
+--------------+-------
+ Keyboard     | 35.00
+ Mouse        | 24.50
+(2 rows)
+
+SELECT email FROM lab12_users WHERE email IS NULL;
+ email
+-------
+
+(1 row)
+
+SELECT email FROM lab12_users WHERE email IS NOT NULL;
+       email
+-------------------
+ fatemeh@gmail.com
+ amina@auca.kg
+ SARA@GMAIL.COM
+ invalid-email
+(4 rows)
+
+\echo '3. LIKE and ILIKE'
+3. LIKE and ILIKE
+SELECT customer_name FROM lab12_customers WHERE customer_name LIKE 'Bra%';
+ customer_name
+---------------
+ Brad Smith
+ Brandon Davis
+(2 rows)
+
+SELECT product_name FROM lab12_products WHERE product_name LIKE '%berry';
+ product_name
+--------------
+ Blueberry
+ Strawberry
+(2 rows)
+
+SELECT email FROM lab12_users WHERE email ILIKE '%@gmail.com';
+       email
+-------------------
+ fatemeh@gmail.com
+ SARA@GMAIL.COM
+(2 rows)
+
+SELECT name FROM lab12_employees WHERE name LIKE 'Sara _hmadi';
+    name
+-------------
+ Sara Ahmadi
+(1 row)
+
+\echo '4. Regular expressions'
+4. Regular expressions
+SELECT name FROM lab12_employees WHERE name ~ '^[AB]';
+     name
+--------------
+ Amina Rahimi
+ Bilal Karimi
+ Ahmad Safi
+ Brandon Lee
+(4 rows)
+
+SELECT email FROM lab12_users WHERE email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$';
+       email
+-------------------
+ fatemeh@gmail.com
+ amina@auca.kg
+ SARA@GMAIL.COM
+(3 rows)
+
+SELECT name FROM lab12_employees WHERE name !~ '^[AB]';
+       name
+------------------
+ Fatemeh Ebrahimi
+ Sara Ahmadi
+ Maryam Nazari
+(3 rows)
+
+SELECT email FROM lab12_users WHERE email !~* '@gmail\.com$';
+     email
+---------------
+ amina@auca.kg
+ invalid-email
+(2 rows)
+
+\echo '5. IN and EXISTS'
+5. IN and EXISTS
+SELECT name, department FROM lab12_employees WHERE department_id IN (3,5,7);
+       name       | department
+------------------+-------------
+ Fatemeh Ebrahimi | Engineering
+ Amina Rahimi     | Sales
+ Sara Ahmadi      | Engineering
+ Bilal Karimi     | Marketing
+ Ahmad Safi       | Sales
+ Maryam Nazari    | Engineering
+(6 rows)
+
+SELECT name FROM lab12_employees WHERE id IN (SELECT employee_id FROM lab12_sales WHERE amount>1000);
+       name
+------------------
+ Fatemeh Ebrahimi
+ Sara Ahmadi
+ Ahmad Safi
+(3 rows)
+
+SELECT e.name FROM lab12_employees e WHERE EXISTS (
+ SELECT 1 FROM lab12_sales s WHERE s.employee_id=e.id AND s.amount>1000
+);
+       name
+------------------
+ Fatemeh Ebrahimi
+ Sara Ahmadi
+ Ahmad Safi
+(3 rows)
+
+\echo '6. CASE expressions'
+6. CASE expressions
+SELECT name,salary,
+ CASE WHEN salary>100000 THEN 'Senior'
+      WHEN salary BETWEEN 60000 AND 100000 THEN 'Mid-Level'
+      ELSE 'Junior' END AS employee_level
+FROM lab12_employees ORDER BY id;
+       name       |  salary   | employee_level
+------------------+-----------+----------------
+ Fatemeh Ebrahimi |  92000.00 | Mid-Level
+ Amina Rahimi     |  68000.00 | Mid-Level
+ Sara Ahmadi      | 112000.00 | Senior
+ Bilal Karimi     |  54000.00 | Junior
+ Ahmad Safi       |  79000.00 | Mid-Level
+ Maryam Nazari    |  72000.00 | Mid-Level
+ Brandon Lee      |  58000.00 | Junior
+(7 rows)
+
+\echo '7. Common Table Expression (CTE)'
+7. Common Table Expression (CTE)
+WITH department_averages AS (
+ SELECT department, AVG(salary) AS avg_salary
+ FROM lab12_employees GROUP BY department
+)
+SELECT e.name,e.salary,e.department,ROUND(da.avg_salary,2) AS avg_salary
+FROM lab12_employees e
+JOIN department_averages da ON e.department=da.department
+WHERE e.salary>da.avg_salary ORDER BY e.department,e.name;
+    name     |  salary   | department  | avg_salary
+-------------+-----------+-------------+------------
+ Sara Ahmadi | 112000.00 | Engineering |   92000.00
+ Ahmad Safi  |  79000.00 | Sales       |   73500.00
+(2 rows)
+
+\echo 'LAB 12 COMPLETE'
+LAB 12 COMPLETE
+postgres=#
