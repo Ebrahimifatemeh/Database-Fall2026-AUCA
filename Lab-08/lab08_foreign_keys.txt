@@ -1,0 +1,339 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \dt lab08_*
+                    List of tables
+ Schema |           Name            | Type  |  Owner
+--------+---------------------------+-------+----------
+ public | lab08_courses             | table | postgres
+ public | lab08_departments         | table | postgres
+ public | lab08_employees           | table | postgres
+ public | lab08_student_enrollments | table | postgres
+ public | lab08_students            | table | postgres
+ public | lab08_team_members        | table | postgres
+ public | lab08_teams               | table | postgres
+ public | lab08_user_profiles       | table | postgres
+ public | lab08_users               | table | postgres
+(9 rows)
+
+
+postgres=# \o 'C:/Users/user/Downloads/Fatemeh_Lab08_Output.txt'
+postgres=# SELECT * FROM lab08_students;
+postgres=# SELECT * FROM lab08_courses;
+postgres=# SELECT * FROM lab08_student_enrollments;
+postgres=# \o
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab08_Submission/Fatemeh_Lab08_Foreign_Keys.sql'
+-- LAB 08: Foreign Keys and Relationships
+-- Student: Fatemeh Ebrahimi
+-- Run in PostgreSQL psql. Uses lab08_ prefix to avoid overwriting other labs.
+-- 1. Parent and child tables; inline foreign key
+DROP TABLE IF EXISTS lab08_employees CASCADE;
+DROP TABLE
+DROP TABLE IF EXISTS lab08_departments CASCADE;
+DROP TABLE
+CREATE TABLE lab08_departments (
+ dept_id SERIAL PRIMARY KEY,
+ dept_name VARCHAR(100) NOT NULL,
+ location VARCHAR(100)
+);
+CREATE TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER REFERENCES lab08_departments(dept_id)
+);
+CREATE TABLE
+INSERT INTO lab08_departments (dept_name, location) VALUES
+ ('Software Engineering','Room 324'),('Economics','Room 310'),('Mathematics','Room 415');
+INSERT 0 3
+INSERT INTO lab08_employees (first_name,last_name,dept_id) VALUES
+ ('Fatemeh','Ebrahimi',1),('Amina','Rahimi',2);
+INSERT 0 2
+SELECT * FROM lab08_departments ORDER BY dept_id;
+ dept_id |      dept_name       | location
+---------+----------------------+----------
+       1 | Software Engineering | Room 324
+       2 | Economics            | Room 310
+       3 | Mathematics          | Room 415
+(3 rows)
+
+SELECT * FROM lab08_employees ORDER BY emp_id;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Fatemeh    | Ebrahimi  |       1
+      2 | Amina      | Rahimi    |       2
+(2 rows)
+
+-- 2. Table-level and named foreign keys
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER,
+ FOREIGN KEY (dept_id) REFERENCES lab08_departments(dept_id)
+);
+CREATE TABLE
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER
+);
+CREATE TABLE
+ALTER TABLE lab08_employees ADD CONSTRAINT fk_lab08_employee_department
+ FOREIGN KEY (dept_id) REFERENCES lab08_departments(dept_id);
+ALTER TABLE
+INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Sara','Ahmadi',1);
+INSERT 0 1
+SELECT * FROM lab08_employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Sara       | Ahmadi    |       1
+(1 row)
+
+-- 3. Referential integrity: expected error (foreign key 99 does not exist)
+-- Uncomment to test and capture PostgreSQL's actual error:
+-- INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Test','Invalid',99);
+-- 4. ON DELETE CASCADE
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER REFERENCES lab08_departments(dept_id) ON DELETE CASCADE
+);
+CREATE TABLE
+INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Fatemeh','Ebrahimi',1);
+INSERT 0 1
+DELETE FROM lab08_departments WHERE dept_id=1;
+DELETE 1
+SELECT * FROM lab08_employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+(0 rows)
+
+-- 5. ON DELETE SET NULL
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER REFERENCES lab08_departments(dept_id) ON DELETE SET NULL
+);
+CREATE TABLE
+INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Amina','Rahimi',2);
+INSERT 0 1
+DELETE FROM lab08_departments WHERE dept_id=2;
+DELETE 1
+SELECT * FROM lab08_employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Amina      | Rahimi    |
+(1 row)
+
+-- 6. ON DELETE SET DEFAULT: default department must exist
+INSERT INTO lab08_departments (dept_id,dept_name,location) VALUES (10,'Unassigned','Online');
+INSERT 0 1
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER DEFAULT 10 REFERENCES lab08_departments(dept_id) ON DELETE SET DEFAULT
+);
+CREATE TABLE
+INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Sara','Ahmadi',3);
+INSERT 0 1
+DELETE FROM lab08_departments WHERE dept_id=3;
+DELETE 1
+SELECT * FROM lab08_employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Sara       | Ahmadi    |      10
+(1 row)
+
+-- 7. ON DELETE RESTRICT and ON UPDATE CASCADE
+DROP TABLE lab08_employees;
+DROP TABLE
+CREATE TABLE lab08_employees (
+ emp_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ dept_id INTEGER REFERENCES lab08_departments(dept_id)
+   ON DELETE RESTRICT ON UPDATE CASCADE
+);
+CREATE TABLE
+INSERT INTO lab08_employees(first_name,last_name,dept_id) VALUES ('Fatemeh','Ebrahimi',10);
+INSERT 0 1
+-- Uncomment to see expected RESTRICT error:
+-- DELETE FROM lab08_departments WHERE dept_id=10;
+UPDATE lab08_departments SET dept_id=20 WHERE dept_id=10;
+UPDATE 1
+SELECT * FROM lab08_employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Fatemeh    | Ebrahimi  |      20
+(1 row)
+
+-- 8. One-to-one relationship
+DROP TABLE IF EXISTS lab08_user_profiles;
+DROP TABLE
+DROP TABLE IF EXISTS lab08_users;
+DROP TABLE
+CREATE TABLE lab08_users (
+ user_id SERIAL PRIMARY KEY,
+ username VARCHAR(50) UNIQUE NOT NULL,
+ email VARCHAR(100) UNIQUE NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab08_user_profiles (
+ profile_id SERIAL PRIMARY KEY,
+ user_id INTEGER UNIQUE NOT NULL REFERENCES lab08_users(user_id) ON DELETE CASCADE,
+ first_name VARCHAR(50),
+ last_name VARCHAR(50),
+ bio TEXT
+);
+CREATE TABLE
+INSERT INTO lab08_users(username,email) VALUES ('fatemeh','fatemeh.lab08@example.com');
+INSERT 0 1
+INSERT INTO lab08_user_profiles(user_id,first_name,last_name,bio)
+ VALUES (1,'Fatemeh','Ebrahimi','Software Engineering student');
+INSERT 0 1
+SELECT u.username,p.first_name,p.last_name FROM lab08_users u
+ JOIN lab08_user_profiles p ON p.user_id=u.user_id;
+ username | first_name | last_name
+----------+------------+-----------
+ fatemeh  | Fatemeh    | Ebrahimi
+(1 row)
+
+-- Uncomment to test expected UNIQUE violation:
+-- INSERT INTO lab08_user_profiles(user_id,first_name) VALUES (1,'Duplicate');
+-- 9. One-to-many relationship
+DROP TABLE IF EXISTS lab08_team_members;
+DROP TABLE
+DROP TABLE IF EXISTS lab08_teams;
+DROP TABLE
+CREATE TABLE lab08_teams (
+ team_id SERIAL PRIMARY KEY,
+ team_name VARCHAR(100) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab08_team_members (
+ member_id SERIAL PRIMARY KEY,
+ member_name VARCHAR(100) NOT NULL,
+ team_id INTEGER NOT NULL REFERENCES lab08_teams(team_id) ON DELETE RESTRICT
+);
+CREATE TABLE
+INSERT INTO lab08_teams(team_name) VALUES ('Research'),('Development');
+INSERT 0 2
+INSERT INTO lab08_team_members(member_name,team_id) VALUES
+ ('Fatemeh Ebrahimi',1),('Amina Rahimi',1),('Sara Ahmadi',2);
+INSERT 0 3
+SELECT t.team_name,m.member_name FROM lab08_teams t
+ JOIN lab08_team_members m ON m.team_id=t.team_id ORDER BY t.team_name,m.member_name;
+  team_name  |   member_name
+-------------+------------------
+ Development | Sara Ahmadi
+ Research    | Amina Rahimi
+ Research    | Fatemeh Ebrahimi
+(3 rows)
+
+-- 10. Many-to-many relationship via junction table
+DROP TABLE IF EXISTS lab08_student_enrollments;
+DROP TABLE
+DROP TABLE IF EXISTS lab08_courses;
+DROP TABLE
+DROP TABLE IF EXISTS lab08_students;
+DROP TABLE
+CREATE TABLE lab08_students (
+ student_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ email VARCHAR(100) UNIQUE
+);
+CREATE TABLE
+CREATE TABLE lab08_courses (
+ course_id SERIAL PRIMARY KEY,
+ course_code VARCHAR(20) UNIQUE NOT NULL,
+ course_name VARCHAR(100) NOT NULL,
+ credits INTEGER NOT NULL
+);
+CREATE TABLE
+CREATE TABLE lab08_student_enrollments (
+ enrollment_id SERIAL PRIMARY KEY,
+ student_id INTEGER NOT NULL REFERENCES lab08_students(student_id) ON DELETE CASCADE,
+ course_id INTEGER NOT NULL REFERENCES lab08_courses(course_id) ON DELETE CASCADE,
+ grade VARCHAR(2),
+ UNIQUE(student_id,course_id)
+);
+CREATE TABLE
+INSERT INTO lab08_students(first_name,last_name,email) VALUES
+ ('Fatemeh','Ebrahimi','fatemeh.lab08@example.com'),
+ ('Amina','Rahimi','amina.lab08@example.com'),
+ ('Sara','Ahmadi','sara.lab08@example.com');
+INSERT 0 3
+INSERT INTO lab08_courses(course_code,course_name,credits) VALUES
+ ('COM101','Introduction to Programming',6),
+ ('COM202','Database Systems',6),
+ ('MAT101','Mathematics',6);
+INSERT 0 3
+INSERT INTO lab08_student_enrollments(student_id,course_id,grade) VALUES
+ (1,1,'A'),(1,2,'A+'),(2,1,'B+'),(2,3,'A'),(3,2,'B');
+INSERT 0 5
+SELECT s.first_name || ' ' || s.last_name AS student_name,
+ c.course_code,c.course_name,se.grade
+ FROM lab08_students s
+ JOIN lab08_student_enrollments se ON se.student_id=s.student_id
+ JOIN lab08_courses c ON c.course_id=se.course_id
+ ORDER BY s.last_name,c.course_code;
+   student_name   | course_code |         course_name         | grade
+------------------+-------------+-----------------------------+-------
+ Sara Ahmadi      | COM202      | Database Systems            | B
+ Fatemeh Ebrahimi | COM101      | Introduction to Programming | A
+ Fatemeh Ebrahimi | COM202      | Database Systems            | A+
+ Amina Rahimi     | COM101      | Introduction to Programming | B+
+ Amina Rahimi     | MAT101      | Mathematics                 | A
+(5 rows)
+
+SELECT s.first_name,s.last_name,se.grade FROM lab08_students s
+ JOIN lab08_student_enrollments se ON se.student_id=s.student_id
+ JOIN lab08_courses c ON c.course_id=se.course_id
+ WHERE c.course_code='COM101';
+ first_name | last_name | grade
+------------+-----------+-------
+ Fatemeh    | Ebrahimi  | A
+ Amina      | Rahimi    | B+
+(2 rows)
+
+SELECT c.course_code,c.course_name,c.credits,se.grade FROM lab08_courses c
+ JOIN lab08_student_enrollments se ON se.course_id=c.course_id
+ JOIN lab08_students s ON s.student_id=se.student_id
+ WHERE s.email='fatemeh.lab08@example.com';
+ course_code |         course_name         | credits | grade
+-------------+-----------------------------+---------+-------
+ COM101      | Introduction to Programming |       6 | A
+ COM202      | Database Systems            |       6 | A+
+(2 rows)
+
+postgres=#
