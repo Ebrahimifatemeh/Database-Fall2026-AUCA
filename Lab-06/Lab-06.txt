@@ -1,90 +1,87 @@
-postgres=# DROP TABLE IF EXISTS lab06_students;
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab06.sql'
+STEP 1: Create table with data types and constraints
+psql:C:/Users/user/Downloads/Fatemeh_Lab06.sql:7: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab06_students" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
 DROP TABLE
-
-postgres=# CREATE TABLE lab06_students (
-postgres(# student_id SERIAL PRIMARY KEY,
-postgres(# first_name VARCHAR(50) NOT NULL,
-postgres(# last_name VARCHAR(50) NOT NULL,
-postgres(# email VARCHAR(100) UNIQUE NOT NULL,
-postgres(# faculty VARCHAR(100),
-postgres(# gpa NUMERIC(3,2) CHECK (gpa >= 0.00 AND gpa <= 4.00),
-postgres(# is_active BOOLEAN DEFAULT TRUE,
-postgres(# enrollment_date DATE DEFAULT CURRENT_DATE
-postgres(# );
 CREATE TABLE
+                                            Table "public.lab06_students"
+     Column      |          Type          | Collation | Nullable |                      Default
+-----------------+------------------------+-----------+----------+----------------------------------------------------
+ student_id      | integer                |           | not null | nextval('lab06_students_student_id_seq'::regclass)
+ first_name      | character varying(50)  |           | not null |
+ last_name       | character varying(50)  |           | not null |
+ email           | character varying(100) |           | not null |
+ faculty         | character varying(100) |           |          |
+ gpa             | numeric(3,2)           |           |          |
+ is_active       | boolean                |           |          | true
+ enrollment_date | date                   |           |          | CURRENT_DATE
+Indexes:
+    "lab06_students_pkey" PRIMARY KEY, btree (student_id)
+    "lab06_students_email_key" UNIQUE CONSTRAINT, btree (email)
+Check constraints:
+    "lab06_students_gpa_check" CHECK (gpa >= 0::numeric AND gpa <= 4::numeric)
 
-postgres=# ALTER TABLE lab06_students
-postgres-# ADD COLUMN phone_number VARCHAR(20);
+
+STEP 2: Add column, change data type, add unique constraint
 ALTER TABLE
-
-postgres=# ALTER TABLE lab06_students
-postgres-# ALTER COLUMN faculty TYPE VARCHAR(150);
 ALTER TABLE
-
-postgres=# ALTER TABLE lab06_students
-postgres-# ADD CONSTRAINT unique_phone UNIQUE (phone_number);
 ALTER TABLE
-
-postgres=# ALTER TABLE lab06_students
-postgres-# RENAME COLUMN is_active TO status;
+STEP 3: Rename a column
 ALTER TABLE
+STEP 4: Insert sample rows and display results
+INSERT 0 3
+ student_id | first_name | last_name |           email           |       faculty        | gpa  | status | enrollment_date
+------------+------------+-----------+---------------------------+----------------------+------+--------+-----------------
+          1 | Fatemeh    | Ebrahimi  | fatemeh.lab06@example.com | Software Engineering | 3.80 | t      | 2026-10-29
+          2 | Amina      | Rahimi    | amina.lab06@example.com   | Computer Science     | 3.65 | t      | 2026-10-29
+          3 | Sara       | Ahmadi    | sara.lab06@example.com    | Software Engineering | 3.95 | f      | 2026-10-29
+(3 rows)
 
-postgres=# SELECT * FROM lab06_students;
 
- student_id | first_name | last_name | email | faculty | gpa | status | enrollment_date | phone_number
-------------+------------+-----------+-------+---------+-----+--------+-----------------+-------------
-(0 rows)
-
-
-postgres=# ALTER TABLE lab06_students
-postgres-# DROP COLUMN phone_number;
+STEP 5: Drop a column and inspect final structure
 ALTER TABLE
+                                            Table "public.lab06_students"
+     Column      |          Type          | Collation | Nullable |                      Default
+-----------------+------------------------+-----------+----------+----------------------------------------------------
+ student_id      | integer                |           | not null | nextval('lab06_students_student_id_seq'::regclass)
+ first_name      | character varying(50)  |           | not null |
+ last_name       | character varying(50)  |           | not null |
+ email           | character varying(100) |           | not null |
+ faculty         | character varying(150) |           |          |
+ gpa             | numeric(3,2)           |           |          |
+ status          | boolean                |           |          | true
+ enrollment_date | date                   |           |          | CURRENT_DATE
+Indexes:
+    "lab06_students_pkey" PRIMARY KEY, btree (student_id)
+    "lab06_students_email_key" UNIQUE CONSTRAINT, btree (email)
+Check constraints:
+    "lab06_students_gpa_check" CHECK (gpa >= 0::numeric AND gpa <= 4::numeric)
 
-postgres=# CREATE TEMP TABLE temp_student_summary (
-postgres(# temp_id SERIAL PRIMARY KEY,
-postgres(# student_name VARCHAR(100),
-postgres(# status_label VARCHAR(20)
-postgres(# );
+
+STEP 6: Temporary table example
 CREATE TABLE
-
-postgres=# INSERT INTO temp_student_summary (student_name, status_label)
-postgres-# VALUES ('Fatemeh Ebrahimi', 'Active');
 INSERT 0 1
-
-postgres=# SELECT * FROM temp_student_summary;
-
  temp_id |   student_name   | status_label
----------+------------------+-------------
+---------+------------------+--------------
        1 | Fatemeh Ebrahimi | Active
 (1 row)
 
 
-postgres=# INSERT INTO lab06_students
-postgres-# (first_name, last_name, email, faculty, gpa, status, enrollment_date)
-postgres-# VALUES
-postgres-# ('Fatemeh', 'Ebrahimi', 'fatemeh.lab06@example.com', 'Software Engineering', 3.80, TRUE, '2026-09-01'),
-postgres-# ('Amina', 'Rahimi', 'amina.lab06@example.com', 'Computer Science', 3.65, TRUE, '2026-09-15');
-INSERT 0 2
-
-postgres=# SELECT * FROM lab06_students;
-
- student_id | first_name | last_name | email | faculty | gpa | status | enrollment_date
-------------+------------+-----------+-------+---------+-----+--------+----------------
-          1 | Fatemeh    | Ebrahimi  | fatemeh.lab06@example.com | Software Engineering | 3.80 | t | 2026-09-01
-          2 | Amina      | Rahimi    | amina.lab06@example.com   | Computer Science     | 3.65 | t | 2026-09-15
-(2 rows)
-
-
-postgres=# INSERT INTO lab06_students
-postgres-# (first_name, last_name, email, faculty, gpa)
-postgres-# VALUES ('Sara', 'Ahmadi', 'sara.lab06@example.com', 'Software Engineering', 3.95);
-INSERT 0 1
-
-postgres=# SELECT * FROM lab06_students;
-
- student_id | first_name | last_name | email | faculty | gpa | status | enrollment_date
-------------+------------+-----------+-------+---------+-----+--------+----------------
-          1 | Fatemeh    | Ebrahimi  | fatemeh.lab06@example.com | Software Engineering | 3.80 | t | 2026-09-01
-          2 | Amina      | Rahimi    | amina.lab06@example.com   | Computer Science     | 3.65 | t | 2026-09-15
-          3 | Sara       | Ahmadi    | sara.lab06@example.com    | Software Engineering | 3.95 | t | CURRENT_DATE
-(3 rows)
+STEP 7: Demonstrate renaming and dropping a table safely
+CREATE TABLE
+ALTER TABLE
+DROP TABLE
+Lab 06 complete. Main lab06_students table remains for review.
+postgres=#
