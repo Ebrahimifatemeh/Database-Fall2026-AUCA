@@ -1,204 +1,184 @@
--- 1. PRIMARY KEY: COLUMN-LEVEL CONSTRAINT
+1. NAMED PRIMARY KEY
 
-CREATE TABLE students (
-    student_id INTEGER PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(150)
-);
+postgres=# CREATE TABLE lab07_students (
+postgres(#     student_id INTEGER,
+postgres(#     name VARCHAR(100),
+postgres(#     email VARCHAR(150),
+postgres(#     CONSTRAINT pk_lab07_students PRIMARY KEY (student_id)
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
+postgres=# INSERT INTO lab07_students (student_id, name, email) VALUES
+postgres-# (10871, 'Fatemeh Ebrahimi', 'fatemeh@example.com'),
+postgres-# (10872, 'Amina Rahimi', 'amina@example.com');
+EXPECTED OUTPUT: INSERT 0 2
 
--- 2. PRIMARY KEY: TABLE-LEVEL CONSTRAINT
+postgres=# SELECT * FROM lab07_students;
+EXPECTED OUTPUT:
+ student_id |       name       |        email
+------------+------------------+---------------------
+      10871 | Fatemeh Ebrahimi | fatemeh@example.com
+      10872 | Amina Rahimi     | amina@example.com
+(2 rows)
 
-CREATE TABLE students_table_level (
-    student_id INTEGER,
-    name VARCHAR(100),
-    email VARCHAR(150),
-    PRIMARY KEY (student_id)
-);
+2. COMPOSITE PRIMARY KEY
 
+postgres=# CREATE TABLE lab07_course_enrollments (
+postgres(#     student_id INTEGER,
+postgres(#     course_id INTEGER,
+postgres(#     semester VARCHAR(20),
+postgres(#     enrollment_date DATE DEFAULT CURRENT_DATE,
+postgres(#     grade CHAR(2),
+postgres(#     PRIMARY KEY (student_id, course_id, semester)
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
--- 3. PRIMARY KEY: NAMED CONSTRAINT
+postgres=# INSERT INTO lab07_course_enrollments (student_id, course_id, semester, grade) VALUES
+postgres-# (10871, 101, '2026-Fall', 'A'),
+postgres-# (10871, 102, '2026-Fall', 'B+'),
+postgres-# (10872, 101, '2026-Fall', 'A'),
+postgres-# (10871, 101, '2026-Spring', 'A+');
+EXPECTED OUTPUT: INSERT 0 4
 
-CREATE TABLE students_named (
-    student_id INTEGER,
-    name VARCHAR(100),
-    email VARCHAR(150),
-    CONSTRAINT pk_students_named PRIMARY KEY (student_id)
-);
+postgres=# SELECT student_id, course_id, semester, grade FROM lab07_course_enrollments ORDER BY student_id, course_id, semester;
+EXPECTED OUTPUT:
+ student_id | course_id |  semester   | grade
+------------+-----------+-------------+-------
+      10871 |       101 | 2026-Fall   | A
+      10871 |       101 | 2026-Spring | A+
+      10871 |       102 | 2026-Fall   | B+
+      10872 |       101 | 2026-Fall   | A
+(4 rows)
 
+3. SERIAL PRIMARY KEY
 
--- 4. ADD PRIMARY KEY TO AN EXISTING TABLE
+postgres=# CREATE TABLE lab07_products (
+postgres(#     product_id SERIAL PRIMARY KEY,
+postgres(#     product_name VARCHAR(100) NOT NULL,
+postgres(#     price DECIMAL(10,2)
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
-CREATE TABLE employees (
-    employee_id INTEGER,
-    employee_name VARCHAR(100),
-    department VARCHAR(100)
-);
+postgres=# INSERT INTO lab07_products (product_name, price) VALUES
+postgres-# ('Database Textbook', 49.99),
+postgres-# ('Wireless Mouse', 25.50),
+postgres-# ('USB Flash Drive', 15.00);
+EXPECTED OUTPUT: INSERT 0 3
 
-ALTER TABLE employees
-ADD CONSTRAINT pk_employees PRIMARY KEY (employee_id);
+postgres=# SELECT * FROM lab07_products ORDER BY product_id;
+EXPECTED OUTPUT:
+ product_id |   product_name    | price
+------------+-------------------+-------
+          1 | Database Textbook | 49.99
+          2 | Wireless Mouse    | 25.50
+          3 | USB Flash Drive   | 15.00
+(3 rows)
 
+4. BIGSERIAL PRIMARY KEY
 
--- 5. SINGLE PRIMARY KEY WITH SERIAL
+postgres=# CREATE TABLE lab07_transactions (
+postgres(#     transaction_id BIGSERIAL PRIMARY KEY,
+postgres(#     amount DECIMAL(15,2),
+postgres(#     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
-CREATE TABLE university_students (
-    student_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE,
-    faculty VARCHAR(50)
-);
+postgres=# INSERT INTO lab07_transactions (amount) VALUES
+postgres-# (1500.75), (25000.00), (99.99);
+EXPECTED OUTPUT: INSERT 0 3
 
-INSERT INTO university_students (name, email, faculty)
-VALUES
-    ('Alice Johnson', 'alice@alatoo.edu.kg', 'Computer Science'),
-    ('Bob Smith', 'bob@alatoo.edu.kg', 'Mathematics'),
-    ('Carol Davis', 'carol@alatoo.edu.kg', 'Computer Science');
+postgres=# SELECT transaction_id, amount FROM lab07_transactions ORDER BY transaction_id;
+EXPECTED OUTPUT:
+ transaction_id |  amount
+----------------+----------
+              1 |  1500.75
+              2 | 25000.00
+              3 |    99.99
+(3 rows)
 
-SELECT * FROM university_students;
+5. GENERATED ALWAYS AS IDENTITY
 
+postgres=# CREATE TABLE lab07_orders (
+postgres(#     order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+postgres(#     customer_name VARCHAR(100),
+postgres(#     order_date DATE DEFAULT CURRENT_DATE
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
--- 6. COMPOSITE PRIMARY KEY
+postgres=# INSERT INTO lab07_orders (customer_name) VALUES
+postgres-# ('Fatemeh Ebrahimi'), ('Sara Ahmadi');
+EXPECTED OUTPUT: INSERT 0 2
 
-CREATE TABLE course_enrollments (
-    student_id INTEGER,
-    course_id INTEGER,
-    semester VARCHAR(20),
-    enrollment_date DATE DEFAULT CURRENT_DATE,
-    grade CHAR(2),
-    PRIMARY KEY (student_id, course_id, semester)
-);
+postgres=# SELECT order_id, customer_name FROM lab07_orders ORDER BY order_id;
+EXPECTED OUTPUT:
+ order_id |  customer_name
+----------+------------------
+        1 | Fatemeh Ebrahimi
+        2 | Sara Ahmadi
+(2 rows)
 
-INSERT INTO course_enrollments
-    (student_id, course_id, semester, grade)
-VALUES
-    (1, 101, '2024-Spring', 'A'),
-    (1, 102, '2024-Spring', 'B+'),
-    (2, 101, '2024-Spring', 'A-'),
-    (1, 101, '2024-Fall', 'A+');
+6. GENERATED BY DEFAULT AS IDENTITY
 
-SELECT * FROM course_enrollments;
+postgres=# CREATE TABLE lab07_customers (
+postgres(#     customer_id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+postgres(#     customer_name VARCHAR(100),
+postgres(#     email VARCHAR(150)
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
+postgres=# INSERT INTO lab07_customers (customer_id, customer_name, email) VALUES
+postgres-# (2001, 'Fatemeh Ebrahimi', 'fatemeh@example.com');
+EXPECTED OUTPUT: INSERT 0 1
 
--- 7. AUTO-INCREMENT USING SERIAL
+postgres=# INSERT INTO lab07_customers (customer_name, email) VALUES
+postgres-# ('Amina Rahimi', 'amina@example.com');
+EXPECTED OUTPUT: INSERT 0 1
 
-CREATE TABLE products (
-    product_id SERIAL PRIMARY KEY,
-    product_name VARCHAR(100) NOT NULL,
-    price DECIMAL(10,2)
-);
+postgres=# SELECT * FROM lab07_customers ORDER BY customer_id;
+EXPECTED OUTPUT:
+ customer_id |  customer_name   |        email
+-------------+------------------+---------------------
+           1 | Amina Rahimi     | amina@example.com
+        2001 | Fatemeh Ebrahimi | fatemeh@example.com
+(2 rows)
 
-INSERT INTO products (product_name, price)
-VALUES
-    ('Laptop', 1200.00),
-    ('Mouse', 25.50),
-    ('Keyboard', 75.00);
+7. PRIMARY KEY CONSTRAINTS (UNIQUE AND NOT NULL)
 
-SELECT * FROM products;
+postgres=# CREATE TABLE lab07_departments (
+postgres(#     dept_id INTEGER PRIMARY KEY,
+postgres(#     dept_name VARCHAR(100)
+postgres(# );
+EXPECTED OUTPUT: CREATE TABLE
 
+postgres=# INSERT INTO lab07_departments VALUES
+postgres-# (1, 'Software Engineering'),
+postgres-# (2, 'Computer Science'),
+postgres-# (3, 'Mathematics');
+EXPECTED OUTPUT: INSERT 0 3
 
--- 8. AUTO-INCREMENT USING BIGSERIAL
+postgres=# SELECT * FROM lab07_departments ORDER BY dept_id;
+EXPECTED OUTPUT:
+ dept_id |      dept_name
+---------+----------------------
+       1 | Software Engineering
+       2 | Computer Science
+       3 | Mathematics
+(3 rows)
 
-CREATE TABLE transactions (
-    transaction_id BIGSERIAL PRIMARY KEY,
-    amount DECIMAL(15,2),
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+postgres=# INSERT INTO lab07_departments VALUES (1, 'Physics');
+EXPECTED ERROR: duplicate key value violates unique constraint "lab07_departments_pkey"
+DETAIL: Key (dept_id)=(1) already exists.
 
-INSERT INTO transactions (amount)
-VALUES
-    (250.00),
-    (500.75),
-    (1000.00);
+postgres=# INSERT INTO lab07_departments VALUES (NULL, 'Physics');
+EXPECTED ERROR: null value in column "dept_id" of relation "lab07_departments" violates not-null constraint
 
-SELECT * FROM transactions;
+NOTE: Both errors above are intentional demonstrations of primary-key enforcement. PostgreSQL wording may differ by version.
 
+8. AUTOMATIC INDEX CREATED FOR PRIMARY KEY
 
--- 9. IDENTITY ALWAYS
-
-CREATE TABLE orders (
-    order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    customer_name VARCHAR(100),
-    order_date DATE DEFAULT CURRENT_DATE
-);
-
-INSERT INTO orders (customer_name)
-VALUES
-    ('Alice Johnson'),
-    ('Bob Smith');
-
-SELECT * FROM orders;
-
-
--- 10. IDENTITY BY DEFAULT
-
-CREATE TABLE customers (
-    customer_id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    customer_name VARCHAR(100),
-    email VARCHAR(150)
-);
-
-INSERT INTO customers (customer_id, customer_name, email)
-VALUES
-    (1000, 'VIP Customer', 'vip@example.com');
-
-INSERT INTO customers (customer_name, email)
-VALUES
-    ('Regular Customer', 'regular@example.com');
-
-SELECT * FROM customers;
-
-
--- 11. PRIMARY KEY CONSTRAINTS
-
-CREATE TABLE departments (
-    dept_id INTEGER PRIMARY KEY,
-    dept_name VARCHAR(100)
-);
-
-INSERT INTO departments
-VALUES
-    (1, 'Computer Science'),
-    (2, 'Mathematics'),
-    (3, 'Physics');
-
-SELECT * FROM departments;
-
-
--- 12. TEST DUPLICATE PRIMARY KEY
--- The following command would produce an error.
--- It is commented out so the script runs successfully.
-
--- INSERT INTO departments
--- VALUES (1, 'Engineering');
-
-
--- 13. TEST NULL PRIMARY KEY
--- The following command would produce an error.
--- It is commented out so the script runs successfully.
-
--- INSERT INTO departments
--- VALUES (NULL, 'Chemistry');
-
-
--- 14. CHECK PRIMARY KEY INDEXES
-
-SELECT
-    tablename,
-    indexname,
-    indexdef
-FROM pg_indexes
-WHERE schemaname = 'public'
-  AND tablename IN (
-      'students',
-      'students_table_level',
-      'students_named',
-      'employees',
-      'university_students',
-      'course_enrollments',
-      'products',
-      'transactions',
-      'orders',
-      'customers',
-      'departments'
-  )
-ORDER BY tablename, indexname;
+postgres=# SELECT indexname FROM pg_indexes WHERE tablename = 'lab07_departments' ORDER BY indexname;
+EXPECTED OUTPUT:
+         indexname
+-----------------------------
+ lab07_departments_pkey
+(1 row)
