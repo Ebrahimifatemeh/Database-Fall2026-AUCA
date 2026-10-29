@@ -1,42 +1,183 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
 postgres=# \encoding UTF8
-postgres=# CREATE DATABASE fatemeh_university;
-CREATE DATABASE
-
-postgres=# \c fatemeh_university
-You are now connected to database "fatemeh_university" as user "postgres".
-
-fatemeh_university=# CREATE TABLE departments (
-fatemeh_university(# department_id SERIAL PRIMARY KEY,
-fatemeh_university(# department_name VARCHAR(100)
-fatemeh_university(# );
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab05.sql'
+C:/Users/user/Downloads/Fatemeh_Lab05.sql: No such file or directory
+postgres=# "C:\Users\user\Downloads\Fatemeh_Lab05.zip"
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab05.sql'
+C:/Users/user/Downloads/Fatemeh_Lab05.sql: No such file or directory
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab05.sql'
+C:/Users/user/Downloads/Fatemeh_Lab05.sql: No such file or directory
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab05/Fatemeh_Lab05.sql'
+C:/Users/user/Downloads/Fatemeh_Lab05/Fatemeh_Lab05.sql: No such file or directory
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab05_Submission/Fatemeh_Lab05.sql'
+-- Lab 05: Introduction to PostgreSQL Tables and Data Manipulation
+-- Student: Fatemeh Ebrahimi
+-- Run in SQL Shell (psql) using: \i 'C:/Users/user/Downloads/Fatemeh_Lab05.sql'
+-- Lab-specific names prevent conflicts with earlier coursework.
+\echo 'LAB 05 - STEP 1: Create departments and students tables'
+LAB 05 - STEP 1: Create departments and students tables
+DROP TABLE IF EXISTS lab05_students;
+psql:C:/Users/user/Downloads/Fatemeh_Lab05_Submission/Fatemeh_Lab05.sql:7: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab05_students" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+DROP TABLE IF EXISTS lab05_departments;
+psql:C:/Users/user/Downloads/Fatemeh_Lab05_Submission/Fatemeh_Lab05.sql:8: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab05_departments" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+CREATE TABLE lab05_departments (
+    department_id SERIAL PRIMARY KEY,
+    department_name VARCHAR(100) NOT NULL UNIQUE,
+    office VARCHAR(30)
+);
 CREATE TABLE
-
-fatemeh_university=# CREATE TABLE students (
-fatemeh_university(# student_id SERIAL PRIMARY KEY,
-fatemeh_university(# first_name VARCHAR(50),
-fatemeh_university(# last_name VARCHAR(50),
-fatemeh_university(# email VARCHAR(100) UNIQUE,
-fatemeh_university(# department_id INT REFERENCES departments(department_id)
-fatemeh_university(# );
+CREATE TABLE lab05_students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    department_id INTEGER REFERENCES lab05_departments(department_id)
+);
 CREATE TABLE
+\d lab05_departments
+                                              Table "public.lab05_departments"
+     Column      |          Type          | Collation | Nullable |                         Default
+-----------------+------------------------+-----------+----------+----------------------------------------------------------
+ department_id   | integer                |           | not null | nextval('lab05_departments_department_id_seq'::regclass)
+ department_name | character varying(100) |           | not null |
+ office          | character varying(30)  |           |          |
+Indexes:
+    "lab05_departments_pkey" PRIMARY KEY, btree (department_id)
+    "lab05_departments_department_name_key" UNIQUE CONSTRAINT, btree (department_name)
+Referenced by:
+    TABLE "lab05_students" CONSTRAINT "lab05_students_department_id_fkey" FOREIGN KEY (department_id) REFERENCES lab05_departments(department_id)
 
-fatemeh_university=# INSERT INTO departments (department_name) VALUES ('Software Engineering');
-INSERT 0 1
+\d lab05_students
+                                           Table "public.lab05_students"
+    Column     |          Type          | Collation | Nullable |                      Default
+---------------+------------------------+-----------+----------+----------------------------------------------------
+ student_id    | integer                |           | not null | nextval('lab05_students_student_id_seq'::regclass)
+ first_name    | character varying(50)  |           | not null |
+ last_name     | character varying(50)  |           | not null |
+ email         | character varying(100) |           |          |
+ department_id | integer                |           |          |
+Indexes:
+    "lab05_students_pkey" PRIMARY KEY, btree (student_id)
+    "lab05_students_email_key" UNIQUE CONSTRAINT, btree (email)
+Foreign-key constraints:
+    "lab05_students_department_id_fkey" FOREIGN KEY (department_id) REFERENCES lab05_departments(department_id)
 
-fatemeh_university=# INSERT INTO students (first_name, last_name, email, department_id)
-fatemeh_university-# VALUES ('Fatemeh', 'Ebrahimi', 'fatemeh@example.com', 1), ('Amina', 'Ahmadi', 'amina@example.com', 1);
-INSERT 0 2
+\echo 'LAB 05 - STEP 2: Insert department records'
+LAB 05 - STEP 2: Insert department records
+INSERT INTO lab05_departments (department_name, office) VALUES
+('Software Engineering', 'Room 324'),
+('Economics', 'Room 310'),
+('Mathematics', 'Room 415');
+INSERT 0 3
+SELECT * FROM lab05_departments ORDER BY department_id;
+ department_id |   department_name    |  office
+---------------+----------------------+----------
+             1 | Software Engineering | Room 324
+             2 | Economics            | Room 310
+             3 | Mathematics          | Room 415
+(3 rows)
 
-fatemeh_university=# SELECT * FROM students;
+\echo 'LAB 05 - STEP 3: Insert student records'
+LAB 05 - STEP 3: Insert student records
+INSERT INTO lab05_students (first_name, last_name, email, department_id) VALUES
+('Fatemeh', 'Ebrahimi', 'fatemeh.lab05@example.com', 1),
+('Amina', 'Rahimi', 'amina.lab05@example.com', 1),
+('Sara', 'Ahmadi', 'sara.lab05@example.com', 2),
+('Laila', 'Karimi', 'laila.lab05@example.com', 3);
+INSERT 0 4
+SELECT * FROM lab05_students ORDER BY student_id;
+ student_id | first_name | last_name |           email           | department_id
+------------+------------+-----------+---------------------------+---------------
+          1 | Fatemeh    | Ebrahimi  | fatemeh.lab05@example.com |             1
+          2 | Amina      | Rahimi    | amina.lab05@example.com   |             1
+          3 | Sara       | Ahmadi    | sara.lab05@example.com    |             2
+          4 | Laila      | Karimi    | laila.lab05@example.com   |             3
+(4 rows)
 
- student_id | first_name | last_name |        email        | department_id
-------------+------------+-----------+---------------------+---------------
-          1 | Fatemeh    | Ebrahimi  | fatemeh@example.com |             1
-          2 | Amina      | Ahmadi    | amina@example.com   |             1
+\echo 'LAB 05 - STEP 4: Filter and sort records'
+LAB 05 - STEP 4: Filter and sort records
+SELECT first_name, last_name, email FROM lab05_students
+WHERE department_id = 1 ORDER BY last_name;
+ first_name | last_name |           email
+------------+-----------+---------------------------
+ Fatemeh    | Ebrahimi  | fatemeh.lab05@example.com
+ Amina      | Rahimi    | amina.lab05@example.com
 (2 rows)
 
+\echo 'LAB 05 - STEP 5: Update a record'
+LAB 05 - STEP 5: Update a record
+UPDATE lab05_students SET department_id = 2
+WHERE email = 'amina.lab05@example.com';
+UPDATE 1
+SELECT student_id, first_name, last_name, department_id
+FROM lab05_students ORDER BY student_id;
+ student_id | first_name | last_name | department_id
+------------+------------+-----------+---------------
+          1 | Fatemeh    | Ebrahimi  |             1
+          2 | Amina      | Rahimi    |             2
+          3 | Sara       | Ahmadi    |             2
+          4 | Laila      | Karimi    |             3
+(4 rows)
 
-fatemeh_university=# \c postgres
-You are now connected to database "postgres" as user "postgres".
+\echo 'LAB 05 - STEP 6: Join tables'
+LAB 05 - STEP 6: Join tables
+SELECT s.student_id, s.first_name, s.last_name, d.department_name
+FROM lab05_students s
+JOIN lab05_departments d ON s.department_id = d.department_id
+ORDER BY s.student_id;
+ student_id | first_name | last_name |   department_name
+------------+------------+-----------+----------------------
+          1 | Fatemeh    | Ebrahimi  | Software Engineering
+          2 | Amina      | Rahimi    | Economics
+          3 | Sara       | Ahmadi    | Economics
+          4 | Laila      | Karimi    | Mathematics
+(4 rows)
 
-postgres=#
+\echo 'LAB 05 - STEP 7: Add a column and update it'
+LAB 05 - STEP 7: Add a column and update it
+ALTER TABLE lab05_students ADD COLUMN enrollment_year INTEGER;
+ALTER TABLE
+UPDATE lab05_students SET enrollment_year = 2026;
+UPDATE 4
+SELECT student_id, first_name, last_name, enrollment_year
+FROM lab05_students ORDER BY student_id;
+ student_id | first_name | last_name | enrollment_year
+------------+------------+-----------+-----------------
+          1 | Fatemeh    | Ebrahimi  |            2026
+          2 | Amina      | Rahimi    |            2026
+          3 | Sara       | Ahmadi    |            2026
+          4 | Laila      | Karimi    |            2026
+(4 rows)
+
+\echo 'LAB 05 - STEP 8: Delete a sample record'
+LAB 05 - STEP 8: Delete a sample record
+DELETE FROM lab05_students WHERE email = 'laila.lab05@example.com';
+DELETE 1
+SELECT * FROM lab05_students ORDER BY student_id;
+ student_id | first_name | last_name |           email           | department_id | enrollment_year
+------------+------------+-----------+---------------------------+---------------+-----------------
+          1 | Fatemeh    | Ebrahimi  | fatemeh.lab05@example.com |             1 |            2026
+          2 | Amina      | Rahimi    | amina.lab05@example.com   |             2 |            2026
+          3 | Sara       | Ahmadi    | sara.lab05@example.com    |             2 |            2026
+(3 rows)
+
+\echo 'LAB 05 COMPLETE'
+LAB 05 COMPLETE
+postgres-#
