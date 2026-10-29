@@ -1,0 +1,159 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=#
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab11_Basic_Data_Operations.sql'
+C:/Users/user/Downloads/Fatemeh_Lab11_Basic_Data_Operations.sql: No such file or directory
+postgres=#
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_lab11_submission/Fatemeh_Lab11_Basic_Data_Operations.sql'
+-- Lab 11: Basic Data Operations
+-- Student: Fatemeh Ebrahimi
+-- PostgreSQL / psql. Safe to rerun; affects lab11_ tables only.
+-- Topics from handout: INSERT, UPDATE, DELETE, bulk operations, CSV import.
+\echo 'LAB 11 - BASIC DATA OPERATIONS'
+LAB 11 - BASIC DATA OPERATIONS
+DROP TABLE IF EXISTS lab11_students;
+psql:C:/Users/user/Downloads/Fatemeh_lab11_submission/Fatemeh_Lab11_Basic_Data_Operations.sql:7: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab11_students" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+CREATE TABLE lab11_students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE
+);
+CREATE TABLE
+\echo '1. INSERT one student'
+1. INSERT one student
+INSERT INTO lab11_students (first_name, last_name, birth_date)
+VALUES ('Fatemeh', 'Ebrahimi', '2002-05-12');
+INSERT 0 1
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-12
+(1 row)
+
+\echo '2. INSERT multiple students'
+2. INSERT multiple students
+INSERT INTO lab11_students (first_name, last_name, birth_date) VALUES
+('Amina', 'Rahimi', '2001-09-23'),
+('Sara', 'Ahmadi', '2003-01-15'),
+('Laila', 'Karimi', '2002-07-30');
+INSERT 0 3
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-12
+          2 | Amina      | Rahimi    | 2001-09-23
+          3 | Sara       | Ahmadi    | 2003-01-15
+          4 | Laila      | Karimi    | 2002-07-30
+(4 rows)
+
+\echo '3. UPDATE one record with WHERE'
+3. UPDATE one record with WHERE
+UPDATE lab11_students
+SET birth_date = '2002-05-15'
+WHERE first_name = 'Fatemeh' AND last_name = 'Ebrahimi';
+UPDATE 1
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          2 | Amina      | Rahimi    | 2001-09-23
+          3 | Sara       | Ahmadi    | 2003-01-15
+          4 | Laila      | Karimi    | 2002-07-30
+(4 rows)
+
+\echo '4. DELETE one record with WHERE'
+4. DELETE one record with WHERE
+DELETE FROM lab11_students
+WHERE first_name = 'Laila' AND last_name = 'Karimi';
+DELETE 1
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          2 | Amina      | Rahimi    | 2001-09-23
+          3 | Sara       | Ahmadi    | 2003-01-15
+(3 rows)
+
+\echo '5. DELETE records matching a date condition'
+5. DELETE records matching a date condition
+DELETE FROM lab11_students WHERE birth_date < '2002-01-01';
+DELETE 1
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          3 | Sara       | Ahmadi    | 2003-01-15
+(2 rows)
+
+\echo '6. Bulk INSERT'
+6. Bulk INSERT
+INSERT INTO lab11_students (first_name, last_name, birth_date) VALUES
+('Nadia', 'Isakov', '2002-04-10'),
+('Meerim', 'Bekova', '2003-06-12'),
+('Tilek', 'Usubaliev', '2001-11-05');
+INSERT 0 3
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          3 | Sara       | Ahmadi    | 2003-01-15
+          5 | Nadia      | Isakov    | 2002-04-10
+          6 | Meerim     | Bekova    | 2003-06-12
+          7 | Tilek      | Usubaliev | 2001-11-05
+(5 rows)
+
+\echo '7. CSV import demonstration using psql client-side COPY'
+7. CSV import demonstration using psql client-side COPY
+-- The professor demonstrates COPY FROM an external CSV file.
+-- This script uses a temporary CSV created alongside the script only if you
+-- separately create the supplied lab11_students.csv file. The command below
+-- is commented out so the script works regardless of file location.
+-- To import manually, change the path to your downloaded CSV file:
+-- \copy lab11_students(first_name,last_name,birth_date) FROM 'C:/Users/user/Downloads/lab11_students.csv' WITH (FORMAT csv, HEADER true)
+\echo '8. Bulk UPDATE'
+8. Bulk UPDATE
+UPDATE lab11_students SET last_name = 'Bekov'
+WHERE last_name IN ('Uulu', 'Isakov');
+UPDATE 1
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          3 | Sara       | Ahmadi    | 2003-01-15
+          5 | Nadia      | Bekov     | 2002-04-10
+          6 | Meerim     | Bekova    | 2003-06-12
+          7 | Tilek      | Usubaliev | 2001-11-05
+(5 rows)
+
+\echo '9. Bulk DELETE'
+9. Bulk DELETE
+DELETE FROM lab11_students WHERE student_id IN (2, 3, 5);
+DELETE 2
+SELECT * FROM lab11_students ORDER BY student_id;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          1 | Fatemeh    | Ebrahimi  | 2002-05-15
+          6 | Meerim     | Bekova    | 2003-06-12
+          7 | Tilek      | Usubaliev | 2001-11-05
+(3 rows)
+
+\echo 'LAB 11 COMPLETE'
+LAB 11 COMPLETE
+postgres=#
