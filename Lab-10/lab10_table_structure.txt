@@ -1,0 +1,294 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab10_Viewing_Database_Structure.sql'
+C:/Users/user/Downloads/Fatemeh_Lab10_Viewing_Database_Structure.sql: No such file or directory
+postgres=#
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab10_Viewing_Database_Structure.sql'
+C:/Users/user/Downloads/Fatemeh_Lab10_Viewing_Database_Structure.sql: No such file or directory
+postgres=#
+postgres=# "C:\Users\user\Downloads\Fatemeh_Lab10_Submission\Fatemeh_Lab10_Viewing_Database_Structure.sql"
+postgres-# "C:\Users\user\Downloads\Fatemeh_Lab10_Submission\Fatemeh_Lab10_Viewing_Database_Structure.sql"
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab10_Submission/Fatemeh_Lab10_Viewing_Database_Structure.sql'
+-- LAB 10: VIEWING DATABASE AND TABLE STRUCTURE
+-- Student: Fatemeh Ebrahimi
+-- Run in PostgreSQL SQL Shell (psql) with \i 'full/path/to/this/file.sql'
+-- This lab is read-only and works with the tables already in your database.
+\encoding UTF8
+\pset pager off
+Pager usage is off.
+\echo '=========================================='
+==========================================
+\echo 'LAB 10 - Viewing Database and Table Structure'
+LAB 10 - Viewing Database and Table Structure
+\echo 'Student: Fatemeh Ebrahimi'
+Student: Fatemeh Ebrahimi
+\echo '=========================================='
+==========================================
+\echo '1. Current database and user'
+1. Current database and user
+SELECT current_database() AS database_name, current_user AS connected_user;
+ database_name | connected_user
+---------------+----------------
+ postgres      | postgres
+(1 row)
+
+\echo '2. List databases (psql meta-command)'
+2. List databases (psql meta-command)
+\l
+                                                             List of databases
+   Name    |  Owner   | Encoding | Locale Provider |       Collate       |        Ctype        | Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+---------------------+---------------------+--------+-----------+-----------------------
+ lab1      | postgres | UTF8     | libc            | Russian_Russia.1252 | Russian_Russia.1252 |        |           |
+ postgres  | postgres | UTF8     | libc            | Russian_Russia.1252 | Russian_Russia.1252 |        |           |
+ template0 | postgres | UTF8     | libc            | Russian_Russia.1252 | Russian_Russia.1252 |        |           | =c/postgres          +
+           |          |          |                 |                     |                     |        |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | Russian_Russia.1252 | Russian_Russia.1252 |        |           | =c/postgres          +
+           |          |          |                 |                     |                     |        |           | postgres=CTc/postgres
+(4 rows)
+
+\echo '3. List all tables in current database (\\dt)'
+3. List all tables in current database (\dt)
+\dt
+                    List of tables
+ Schema |           Name            | Type  |  Owner
+--------+---------------------------+-------+----------
+ public | lab05_departments         | table | postgres
+ public | lab05_students            | table | postgres
+ public | lab06_students            | table | postgres
+ public | lab07_customers           | table | postgres
+ public | lab07_departments         | table | postgres
+ public | lab07_enrollments         | table | postgres
+ public | lab07_orders              | table | postgres
+ public | lab07_products            | table | postgres
+ public | lab07_students            | table | postgres
+ public | lab07_transactions        | table | postgres
+ public | lab08_courses             | table | postgres
+ public | lab08_departments         | table | postgres
+ public | lab08_employees           | table | postgres
+ public | lab08_student_enrollments | table | postgres
+ public | lab08_students            | table | postgres
+ public | lab08_team_members        | table | postgres
+ public | lab08_teams               | table | postgres
+ public | lab08_user_profiles       | table | postgres
+ public | lab08_users               | table | postgres
+ public | lab09_authors             | table | postgres
+ public | lab09_book_authors        | table | postgres
+ public | lab09_books               | table | postgres
+ public | lab09_courses             | table | postgres
+ public | lab09_departments         | table | postgres
+ public | lab09_enrollments         | table | postgres
+ public | lab09_enrollments_bad     | table | postgres
+ public | lab09_loans               | table | postgres
+ public | lab09_members             | table | postgres
+ public | lab09_student_phones      | table | postgres
+ public | lab09_students            | table | postgres
+ public | lab09_students_3nf_bad    | table | postgres
+ public | lab09_students_bad        | table | postgres
+(32 rows)
+
+\echo '4. List tables created for Lab 08 (\\dt lab08_*)'
+4. List tables created for Lab 08 (\dt lab08_*)
+\dt lab08_*
+                    List of tables
+ Schema |           Name            | Type  |  Owner
+--------+---------------------------+-------+----------
+ public | lab08_courses             | table | postgres
+ public | lab08_departments         | table | postgres
+ public | lab08_employees           | table | postgres
+ public | lab08_student_enrollments | table | postgres
+ public | lab08_students            | table | postgres
+ public | lab08_team_members        | table | postgres
+ public | lab08_teams               | table | postgres
+ public | lab08_user_profiles       | table | postgres
+ public | lab08_users               | table | postgres
+(9 rows)
+
+\echo '5. Describe the structure of Lab 08 students table (\\d)'
+5. Describe the structure of Lab 08 students table (\d)
+\d lab08_students
+                                          Table "public.lab08_students"
+   Column   |          Type          | Collation | Nullable |                      Default
+------------+------------------------+-----------+----------+----------------------------------------------------
+ student_id | integer                |           | not null | nextval('lab08_students_student_id_seq'::regclass)
+ first_name | character varying(50)  |           | not null |
+ last_name  | character varying(50)  |           | not null |
+ email      | character varying(100) |           |          |
+Indexes:
+    "lab08_students_pkey" PRIMARY KEY, btree (student_id)
+    "lab08_students_email_key" UNIQUE CONSTRAINT, btree (email)
+Referenced by:
+    TABLE "lab08_student_enrollments" CONSTRAINT "lab08_student_enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES lab08_students(student_id) ON DELETE CASCADE
+
+\echo '6. Describe the structure of Lab 08 courses table'
+6. Describe the structure of Lab 08 courses table
+\d lab08_courses
+                                          Table "public.lab08_courses"
+   Column    |          Type          | Collation | Nullable |                     Default
+-------------+------------------------+-----------+----------+--------------------------------------------------
+ course_id   | integer                |           | not null | nextval('lab08_courses_course_id_seq'::regclass)
+ course_code | character varying(20)  |           | not null |
+ course_name | character varying(100) |           | not null |
+ credits     | integer                |           | not null |
+Indexes:
+    "lab08_courses_pkey" PRIMARY KEY, btree (course_id)
+    "lab08_courses_course_code_key" UNIQUE CONSTRAINT, btree (course_code)
+Referenced by:
+    TABLE "lab08_student_enrollments" CONSTRAINT "lab08_student_enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES lab08_courses(course_id) ON DELETE CASCADE
+
+\echo '7. Describe the structure of Lab 08 enrollment table'
+7. Describe the structure of Lab 08 enrollment table
+\d lab08_student_enrollments
+                                            Table "public.lab08_student_enrollments"
+    Column     |         Type         | Collation | Nullable |                             Default
+---------------+----------------------+-----------+----------+------------------------------------------------------------------
+ enrollment_id | integer              |           | not null | nextval('lab08_student_enrollments_enrollment_id_seq'::regclass)
+ student_id    | integer              |           | not null |
+ course_id     | integer              |           | not null |
+ grade         | character varying(2) |           |          |
+Indexes:
+    "lab08_student_enrollments_pkey" PRIMARY KEY, btree (enrollment_id)
+    "lab08_student_enrollments_student_id_course_id_key" UNIQUE CONSTRAINT, btree (student_id, course_id)
+Foreign-key constraints:
+    "lab08_student_enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES lab08_courses(course_id) ON DELETE CASCADE
+    "lab08_student_enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES lab08_students(student_id) ON DELETE CASCADE
+
+\echo '8. Detailed description, including storage information (\\d+)'
+8. Detailed description, including storage information (\d+)
+\d+ lab08_student_enrollments
+                                                                       Table "public.lab08_student_enrollments"
+    Column     |         Type         | Collation | Nullable |                             Default                              | Storage  | Compression | Stats target | Description
+---------------+----------------------+-----------+----------+------------------------------------------------------------------+----------+-------------+--------------+-------------
+ enrollment_id | integer              |           | not null | nextval('lab08_student_enrollments_enrollment_id_seq'::regclass) | plain    |             |              |
+ student_id    | integer              |           | not null |                                                                  | plain    |             |              |
+ course_id     | integer              |           | not null |                                                                  | plain    |             |              |
+ grade         | character varying(2) |           |          |                                                                  | extended |             |              |
+Indexes:
+    "lab08_student_enrollments_pkey" PRIMARY KEY, btree (enrollment_id)
+    "lab08_student_enrollments_student_id_course_id_key" UNIQUE CONSTRAINT, btree (student_id, course_id)
+Foreign-key constraints:
+    "lab08_student_enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES lab08_courses(course_id) ON DELETE CASCADE
+    "lab08_student_enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES lab08_students(student_id) ON DELETE CASCADE
+Not-null constraints:
+    "lab08_student_enrollments_enrollment_id_not_null" NOT NULL "enrollment_id"
+    "lab08_student_enrollments_student_id_not_null" NOT NULL "student_id"
+    "lab08_student_enrollments_course_id_not_null" NOT NULL "course_id"
+Access method: heap
+
+\echo '9. Column names, data types, and nullability'
+9. Column names, data types, and nullability
+SELECT table_name, ordinal_position, column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name IN ('lab08_students', 'lab08_courses', 'lab08_student_enrollments')
+ORDER BY table_name, ordinal_position;
+        table_name         | ordinal_position |  column_name  |     data_type     | is_nullable
+---------------------------+------------------+---------------+-------------------+-------------
+ lab08_courses             |                1 | course_id     | integer           | NO
+ lab08_courses             |                2 | course_code   | character varying | NO
+ lab08_courses             |                3 | course_name   | character varying | NO
+ lab08_courses             |                4 | credits       | integer           | NO
+ lab08_student_enrollments |                1 | enrollment_id | integer           | NO
+ lab08_student_enrollments |                2 | student_id    | integer           | NO
+ lab08_student_enrollments |                3 | course_id     | integer           | NO
+ lab08_student_enrollments |                4 | grade         | character varying | YES
+ lab08_students            |                1 | student_id    | integer           | NO
+ lab08_students            |                2 | first_name    | character varying | NO
+ lab08_students            |                3 | last_name     | character varying | NO
+ lab08_students            |                4 | email         | character varying | YES
+(12 rows)
+
+\echo '10. Foreign-key relationships in the Lab 08 tables'
+10. Foreign-key relationships in the Lab 08 tables
+SELECT tc.table_name, kcu.column_name, ccu.table_name AS referenced_table,
+       ccu.column_name AS referenced_column
+FROM information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu
+  ON tc.constraint_name = kcu.constraint_name
+ AND tc.constraint_schema = kcu.constraint_schema
+JOIN information_schema.constraint_column_usage AS ccu
+  ON tc.constraint_name = ccu.constraint_name
+ AND tc.constraint_schema = ccu.constraint_schema
+WHERE tc.constraint_type = 'FOREIGN KEY'
+  AND tc.table_schema = 'public'
+  AND tc.table_name LIKE 'lab08_%'
+ORDER BY tc.table_name, kcu.column_name;
+        table_name         | column_name | referenced_table  | referenced_column
+---------------------------+-------------+-------------------+-------------------
+ lab08_employees           | dept_id     | lab08_departments | dept_id
+ lab08_student_enrollments | course_id   | lab08_courses     | course_id
+ lab08_student_enrollments | student_id  | lab08_students    | student_id
+ lab08_team_members        | team_id     | lab08_teams       | team_id
+ lab08_user_profiles       | user_id     | lab08_users       | user_id
+(5 rows)
+
+\echo '11. Show primary-key constraints in Lab 08 tables'
+11. Show primary-key constraints in Lab 08 tables
+SELECT tc.table_name, tc.constraint_name, kcu.column_name
+FROM information_schema.table_constraints tc
+JOIN information_schema.key_column_usage kcu
+  ON tc.constraint_name = kcu.constraint_name
+ AND tc.constraint_schema = kcu.constraint_schema
+WHERE tc.table_schema = 'public'
+  AND tc.constraint_type = 'PRIMARY KEY'
+  AND tc.table_name LIKE 'lab08_%'
+ORDER BY tc.table_name, kcu.ordinal_position;
+        table_name         |        constraint_name         |  column_name
+---------------------------+--------------------------------+---------------
+ lab08_courses             | lab08_courses_pkey             | course_id
+ lab08_departments         | lab08_departments_pkey         | dept_id
+ lab08_employees           | lab08_employees_pkey           | emp_id
+ lab08_student_enrollments | lab08_student_enrollments_pkey | enrollment_id
+ lab08_students            | lab08_students_pkey            | student_id
+ lab08_team_members        | lab08_team_members_pkey        | member_id
+ lab08_teams               | lab08_teams_pkey               | team_id
+ lab08_user_profiles       | lab08_user_profiles_pkey       | profile_id
+ lab08_users               | lab08_users_pkey               | user_id
+(9 rows)
+
+\echo '12. Show available Lab 09 tables, if previously created'
+12. Show available Lab 09 tables, if previously created
+\dt lab09_*
+                   List of tables
+ Schema |          Name          | Type  |  Owner
+--------+------------------------+-------+----------
+ public | lab09_authors          | table | postgres
+ public | lab09_book_authors     | table | postgres
+ public | lab09_books            | table | postgres
+ public | lab09_courses          | table | postgres
+ public | lab09_departments      | table | postgres
+ public | lab09_enrollments      | table | postgres
+ public | lab09_enrollments_bad  | table | postgres
+ public | lab09_loans            | table | postgres
+ public | lab09_members          | table | postgres
+ public | lab09_student_phones   | table | postgres
+ public | lab09_students         | table | postgres
+ public | lab09_students_3nf_bad | table | postgres
+ public | lab09_students_bad     | table | postgres
+(13 rows)
+
+\echo '13. ER diagram: create/view in pgAdmin (GUI step, not SQL)'
+13. ER diagram: create/view in pgAdmin (GUI step, not SQL)
+\echo 'Open pgAdmin > Servers > Databases > postgres > Schemas > public > Tables.'
+Open pgAdmin > Servers > Databases > postgres > Schemas > public > Tables.
+\echo 'Use the ERD Tool / Generate ERD option in your pgAdmin version.'
+Use the ERD Tool / Generate ERD option in your pgAdmin version.
+\echo 'Save a screenshot of the ER diagram separately for GitHub.'
+Save a screenshot of the ER diagram separately for GitHub.
+\echo 'LAB 10 COMPLETE'
+LAB 10 COMPLETE
+postgres-#
