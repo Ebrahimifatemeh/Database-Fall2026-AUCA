@@ -1,0 +1,308 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \encoding UTF8
+postgres=# \o
+postgres=# \pset pager off
+Pager usage is off.
+postgres=# \set ECHO all
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql'
+-- LAB 09: DATABASE DESIGN BASICS
+-- Student: Fatemeh Ebrahimi
+-- PostgreSQL: ER relationships, normalization (1NF, 2NF, 3NF), library design
+-- All tables use lab09_ prefix to avoid affecting earlier labs.
+\echo 'LAB 09 - DATABASE DESIGN BASICS'
+LAB 09 - DATABASE DESIGN BASICS
+\echo '1. Clean up previous Lab 09 tables (safe to rerun)'
+1. Clean up previous Lab 09 tables (safe to rerun)
+DROP TABLE IF EXISTS lab09_loans, lab09_book_authors, lab09_members, lab09_books, lab09_authors,
+ lab09_enrollments, lab09_student_phones, lab09_students, lab09_courses, lab09_departments,
+ lab09_students_bad, lab09_enrollments_bad, lab09_students_3nf_bad CASCADE;
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_loans" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_book_authors" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_members" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_books" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_authors" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_enrollments" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_student_phones" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_students" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_courses" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_departments" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_students_bad" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_enrollments_bad" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab09_Submission/Fatemeh_Lab09_Database_Design.sql:9: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "lab09_students_3nf_bad" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+\echo '2. First Normal Form (1NF): repeating values versus atomic values'
+2. First Normal Form (1NF): repeating values versus atomic values
+-- Example of a poorly designed table: multiple phone numbers in one field
+CREATE TABLE lab09_students_bad (
+ student_id INTEGER PRIMARY KEY,
+ student_name VARCHAR(100) NOT NULL,
+ phone_numbers TEXT
+);
+CREATE TABLE
+INSERT INTO lab09_students_bad VALUES
+ (1,'Fatemeh Ebrahimi','555-1001, 555-1002');
+INSERT 0 1
+SELECT * FROM lab09_students_bad;
+ student_id |   student_name   |   phone_numbers
+------------+------------------+--------------------
+          1 | Fatemeh Ebrahimi | 555-1001, 555-1002
+(1 row)
+
+-- 1NF: one phone number per row in a related table
+CREATE TABLE lab09_departments (
+ department_id INTEGER PRIMARY KEY,
+ department_name VARCHAR(100) NOT NULL UNIQUE,
+ department_head VARCHAR(100)
+);
+CREATE TABLE
+INSERT INTO lab09_departments VALUES
+ (1,'Software Engineering','Dr. Karimov'),
+ (2,'Economics','Dr. Rahimi');
+INSERT 0 2
+CREATE TABLE lab09_students (
+ student_id INTEGER PRIMARY KEY,
+ student_name VARCHAR(100) NOT NULL,
+ email VARCHAR(100) UNIQUE,
+ department_id INTEGER REFERENCES lab09_departments(department_id)
+);
+CREATE TABLE
+CREATE TABLE lab09_student_phones (
+ student_id INTEGER NOT NULL REFERENCES lab09_students(student_id) ON DELETE CASCADE,
+ phone_number VARCHAR(20) NOT NULL,
+ phone_type VARCHAR(20),
+ PRIMARY KEY(student_id, phone_number)
+);
+CREATE TABLE
+INSERT INTO lab09_students VALUES
+ (1,'Fatemeh Ebrahimi','fatemeh.lab09@example.com',1),
+ (2,'Amina Rahimi','amina.lab09@example.com',1),
+ (3,'Sara Ahmadi','sara.lab09@example.com',2);
+INSERT 0 3
+INSERT INTO lab09_student_phones VALUES
+ (1,'555-1001','mobile'),(1,'555-1002','home'),(2,'555-2001','mobile');
+INSERT 0 3
+SELECT s.student_name,p.phone_number,p.phone_type
+FROM lab09_students s JOIN lab09_student_phones p ON p.student_id=s.student_id
+ORDER BY s.student_id,p.phone_number;
+   student_name   | phone_number | phone_type
+------------------+--------------+------------
+ Fatemeh Ebrahimi | 555-1001     | mobile
+ Fatemeh Ebrahimi | 555-1002     | home
+ Amina Rahimi     | 555-2001     | mobile
+(3 rows)
+
+\echo '3. Second Normal Form (2NF): remove partial dependencies'
+3. Second Normal Form (2NF): remove partial dependencies
+-- BAD: course_name depends only on course_id, not the whole composite key
+CREATE TABLE lab09_enrollments_bad (
+ student_id INTEGER,
+ course_id INTEGER,
+ course_name VARCHAR(100),
+ grade VARCHAR(2),
+ PRIMARY KEY(student_id,course_id)
+);
+CREATE TABLE
+INSERT INTO lab09_enrollments_bad VALUES
+ (1,101,'Database Systems','A'),(2,101,'Database Systems','B+');
+INSERT 0 2
+SELECT * FROM lab09_enrollments_bad;
+ student_id | course_id |   course_name    | grade
+------------+-----------+------------------+-------
+          1 |       101 | Database Systems | A
+          2 |       101 | Database Systems | B+
+(2 rows)
+
+-- GOOD: course details are stored once in courses
+CREATE TABLE lab09_courses (
+ course_id INTEGER PRIMARY KEY,
+ course_name VARCHAR(100) NOT NULL,
+ credits INTEGER NOT NULL CHECK(credits>0)
+);
+CREATE TABLE
+CREATE TABLE lab09_enrollments (
+ student_id INTEGER REFERENCES lab09_students(student_id),
+ course_id INTEGER REFERENCES lab09_courses(course_id),
+ grade VARCHAR(2),
+ PRIMARY KEY(student_id,course_id)
+);
+CREATE TABLE
+INSERT INTO lab09_courses VALUES
+ (101,'Database Systems',6),(102,'Software Engineering',6),(103,'Statistics',6);
+INSERT 0 3
+INSERT INTO lab09_enrollments VALUES
+ (1,101,'A'),(1,102,'A+'),(2,101,'B+'),(3,103,'A');
+INSERT 0 4
+SELECT s.student_name,c.course_name,e.grade
+FROM lab09_enrollments e
+JOIN lab09_students s ON s.student_id=e.student_id
+JOIN lab09_courses c ON c.course_id=e.course_id
+ORDER BY s.student_name,c.course_name;
+   student_name   |     course_name      | grade
+------------------+----------------------+-------
+ Amina Rahimi     | Database Systems     | B+
+ Fatemeh Ebrahimi | Database Systems     | A
+ Fatemeh Ebrahimi | Software Engineering | A+
+ Sara Ahmadi      | Statistics           | A
+(4 rows)
+
+\echo '4. Third Normal Form (3NF): remove transitive dependencies'
+4. Third Normal Form (3NF): remove transitive dependencies
+-- BAD: department_name depends on department_id, not directly on student_id
+CREATE TABLE lab09_students_3nf_bad (
+ student_id INTEGER PRIMARY KEY,
+ student_name VARCHAR(100),
+ department_id INTEGER,
+ department_name VARCHAR(100)
+);
+CREATE TABLE
+INSERT INTO lab09_students_3nf_bad VALUES
+ (1,'Fatemeh Ebrahimi',1,'Software Engineering');
+INSERT 0 1
+SELECT * FROM lab09_students_3nf_bad;
+ student_id |   student_name   | department_id |   department_name
+------------+------------------+---------------+----------------------
+          1 | Fatemeh Ebrahimi |             1 | Software Engineering
+(1 row)
+
+-- GOOD: lab09_students references lab09_departments instead
+SELECT s.student_name,d.department_name,d.department_head
+FROM lab09_students s JOIN lab09_departments d ON d.department_id=s.department_id
+ORDER BY s.student_id;
+   student_name   |   department_name    | department_head
+------------------+----------------------+-----------------
+ Fatemeh Ebrahimi | Software Engineering | Dr. Karimov
+ Amina Rahimi     | Software Engineering | Dr. Karimov
+ Sara Ahmadi      | Economics            | Dr. Rahimi
+(3 rows)
+
+\echo '5. Library Management System: ER entities and relationships'
+5. Library Management System: ER entities and relationships
+-- Author WRITES Book: many-to-many via lab09_book_authors
+-- Member BORROWS Book: one-to-many via lab09_loans
+CREATE TABLE lab09_authors (
+ author_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ birth_date DATE
+);
+CREATE TABLE
+CREATE TABLE lab09_books (
+ book_id SERIAL PRIMARY KEY,
+ title VARCHAR(200) NOT NULL,
+ isbn VARCHAR(13) UNIQUE,
+ publication_year INTEGER,
+ available_copies INTEGER NOT NULL DEFAULT 1 CHECK(available_copies>=0)
+);
+CREATE TABLE
+CREATE TABLE lab09_book_authors (
+ book_id INTEGER REFERENCES lab09_books(book_id) ON DELETE CASCADE,
+ author_id INTEGER REFERENCES lab09_authors(author_id) ON DELETE CASCADE,
+ PRIMARY KEY(book_id,author_id)
+);
+CREATE TABLE
+CREATE TABLE lab09_members (
+ member_id SERIAL PRIMARY KEY,
+ first_name VARCHAR(50) NOT NULL,
+ last_name VARCHAR(50) NOT NULL,
+ email VARCHAR(100) UNIQUE NOT NULL,
+ phone VARCHAR(15),
+ membership_date DATE DEFAULT CURRENT_DATE
+);
+CREATE TABLE
+CREATE TABLE lab09_loans (
+ loan_id SERIAL PRIMARY KEY,
+ member_id INTEGER NOT NULL REFERENCES lab09_members(member_id),
+ book_id INTEGER NOT NULL REFERENCES lab09_books(book_id),
+ loan_date DATE DEFAULT CURRENT_DATE,
+ due_date DATE NOT NULL,
+ return_date DATE,
+ late_fee DECIMAL(10,2) DEFAULT 0.00 CHECK(late_fee>=0)
+);
+CREATE TABLE
+INSERT INTO lab09_authors(first_name,last_name,birth_date) VALUES
+ ('George','Orwell','1903-06-25'),('Jane','Austen','1775-12-16'),
+ ('Andrew','Hunt',NULL),('David','Thomas',NULL);
+INSERT 0 4
+INSERT INTO lab09_books(title,isbn,publication_year,available_copies) VALUES
+ ('1984','9780451524935',1949,3),
+ ('Pride and Prejudice','9780141439518',1813,2),
+ ('The Pragmatic Programmer','9780135957059',1999,4);
+INSERT 0 3
+INSERT INTO lab09_book_authors VALUES (1,1),(2,2),(3,3),(3,4);
+INSERT 0 4
+INSERT INTO lab09_members(first_name,last_name,email,phone) VALUES
+ ('Fatemeh','Ebrahimi','fatemeh.library@example.com','555-0101'),
+ ('Amina','Rahimi','amina.library@example.com','555-0102'),
+ ('Sara','Ahmadi','sara.library@example.com','555-0103');
+INSERT 0 3
+INSERT INTO lab09_loans(member_id,book_id,loan_date,due_date,return_date,late_fee) VALUES
+ (1,1,'2026-10-01','2026-10-15','2026-10-14',0.00),
+ (1,3,'2026-10-20','2026-11-03',NULL,0.00),
+ (2,2,'2026-10-03','2026-10-17','2026-10-20',1.50),
+ (3,1,'2026-10-22','2026-11-05',NULL,0.00);
+INSERT 0 4
+\echo '6. Books with their authors (many-to-many JOIN)'
+6. Books with their authors (many-to-many JOIN)
+SELECT b.title,a.first_name || ' ' || a.last_name AS author
+FROM lab09_books b JOIN lab09_book_authors ba ON ba.book_id=b.book_id
+JOIN lab09_authors a ON a.author_id=ba.author_id
+ORDER BY b.title,author;
+          title           |    author
+--------------------------+---------------
+ 1984                     | George Orwell
+ Pride and Prejudice      | Jane Austen
+ The Pragmatic Programmer | Andrew Hunt
+ The Pragmatic Programmer | David Thomas
+(4 rows)
+
+\echo '7. Member borrowing history (one-to-many JOIN)'
+7. Member borrowing history (one-to-many JOIN)
+SELECT m.first_name || ' ' || m.last_name AS member,b.title,
+ l.loan_date,l.due_date,l.return_date,l.late_fee
+FROM lab09_loans l JOIN lab09_members m ON m.member_id=l.member_id
+JOIN lab09_books b ON b.book_id=l.book_id
+ORDER BY m.member_id,l.loan_date;
+      member      |          title           | loan_date  |  due_date  | return_date | late_fee
+------------------+--------------------------+------------+------------+-------------+----------
+ Fatemeh Ebrahimi | 1984                     | 2026-10-01 | 2026-10-15 | 2026-10-14  |     0.00
+ Fatemeh Ebrahimi | The Pragmatic Programmer | 2026-10-20 | 2026-11-03 |             |     0.00
+ Amina Rahimi     | Pride and Prejudice      | 2026-10-03 | 2026-10-17 | 2026-10-20  |     1.50
+ Sara Ahmadi      | 1984                     | 2026-10-22 | 2026-11-05 |             |     0.00
+(4 rows)
+
+\echo '8. Check normalized tables and relationships'
+8. Check normalized tables and relationships
+SELECT table_name FROM information_schema.tables
+WHERE table_schema='public' AND table_name LIKE 'lab09_%'
+ORDER BY table_name;
+       table_name
+------------------------
+ lab09_authors
+ lab09_book_authors
+ lab09_books
+ lab09_courses
+ lab09_departments
+ lab09_enrollments
+ lab09_enrollments_bad
+ lab09_loans
+ lab09_members
+ lab09_student_phones
+ lab09_students
+ lab09_students_3nf_bad
+ lab09_students_bad
+(13 rows)
+
+\echo 'LAB 09 COMPLETE'
+LAB 09 COMPLETE
+postgres=#
