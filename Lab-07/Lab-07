@@ -1,184 +1,102 @@
-1. NAMED PRIMARY KEY
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
 
-postgres=# CREATE TABLE lab07_students (
-postgres(#     student_id INTEGER,
-postgres(#     name VARCHAR(100),
-postgres(#     email VARCHAR(150),
-postgres(#     CONSTRAINT pk_lab07_students PRIMARY KEY (student_id)
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
 
-postgres=# INSERT INTO lab07_students (student_id, name, email) VALUES
-postgres-# (10871, 'Fatemeh Ebrahimi', 'fatemeh@example.com'),
-postgres-# (10872, 'Amina Rahimi', 'amina@example.com');
-EXPECTED OUTPUT: INSERT 0 2
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab07_Primary_Keys.sql'
+C:/Users/user/Downloads/Fatemeh_Lab07_Primary_Keys.sql: No such file or directory
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql'
+LAB 07 - PRIMARY KEYS
+1. Single-column primary key
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:8: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 3
+ student_id | first_name | last_name |        email
+------------+------------+-----------+---------------------
+          1 | Fatemeh    | Ebrahimi  | fatemeh@example.com
+          2 | Amina      | Ahmadi    | amina@example.com
+          3 | Sara       | Rahimi    | sara@example.com
+(3 rows)
 
-postgres=# SELECT * FROM lab07_students;
-EXPECTED OUTPUT:
- student_id |       name       |        email
-------------+------------------+---------------------
-      10871 | Fatemeh Ebrahimi | fatemeh@example.com
-      10872 | Amina Rahimi     | amina@example.com
+
+2. Composite primary key
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:22: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 3
+ student_id | course_code | semester  | grade
+------------+-------------+-----------+-------
+          1 | COM431      | Fall 2026 | A
+          1 | DB101       | Fall 2026 | A+
+          2 | DB101       | Fall 2026 | B+
+(3 rows)
+
+
+3. SERIAL primary key
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:37: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 3
+ product_id | product_name | price
+------------+--------------+--------
+          1 | Laptop       | 850.00
+          2 | Keyboard     |  35.50
+          3 | Mouse        |  18.99
+(3 rows)
+
+
+4. BIGSERIAL primary key
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:48: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 2
+ transaction_id |   description   | amount
+----------------+-----------------+--------
+              1 | Tuition payment | 500.00
+              2 | Book purchase   |  42.50
 (2 rows)
 
-2. COMPOSITE PRIMARY KEY
-
-postgres=# CREATE TABLE lab07_course_enrollments (
-postgres(#     student_id INTEGER,
-postgres(#     course_id INTEGER,
-postgres(#     semester VARCHAR(20),
-postgres(#     enrollment_date DATE DEFAULT CURRENT_DATE,
-postgres(#     grade CHAR(2),
-postgres(#     PRIMARY KEY (student_id, course_id, semester)
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_course_enrollments (student_id, course_id, semester, grade) VALUES
-postgres-# (10871, 101, '2026-Fall', 'A'),
-postgres-# (10871, 102, '2026-Fall', 'B+'),
-postgres-# (10872, 101, '2026-Fall', 'A'),
-postgres-# (10871, 101, '2026-Spring', 'A+');
-EXPECTED OUTPUT: INSERT 0 4
-
-postgres=# SELECT student_id, course_id, semester, grade FROM lab07_course_enrollments ORDER BY student_id, course_id, semester;
-EXPECTED OUTPUT:
- student_id | course_id |  semester   | grade
-------------+-----------+-------------+-------
-      10871 |       101 | 2026-Fall   | A
-      10871 |       101 | 2026-Spring | A+
-      10871 |       102 | 2026-Fall   | B+
-      10872 |       101 | 2026-Fall   | A
-(4 rows)
-
-3. SERIAL PRIMARY KEY
-
-postgres=# CREATE TABLE lab07_products (
-postgres(#     product_id SERIAL PRIMARY KEY,
-postgres(#     product_name VARCHAR(100) NOT NULL,
-postgres(#     price DECIMAL(10,2)
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_products (product_name, price) VALUES
-postgres-# ('Database Textbook', 49.99),
-postgres-# ('Wireless Mouse', 25.50),
-postgres-# ('USB Flash Drive', 15.00);
-EXPECTED OUTPUT: INSERT 0 3
-
-postgres=# SELECT * FROM lab07_products ORDER BY product_id;
-EXPECTED OUTPUT:
- product_id |   product_name    | price
-------------+-------------------+-------
-          1 | Database Textbook | 49.99
-          2 | Wireless Mouse    | 25.50
-          3 | USB Flash Drive   | 15.00
-(3 rows)
-
-4. BIGSERIAL PRIMARY KEY
-
-postgres=# CREATE TABLE lab07_transactions (
-postgres(#     transaction_id BIGSERIAL PRIMARY KEY,
-postgres(#     amount DECIMAL(15,2),
-postgres(#     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_transactions (amount) VALUES
-postgres-# (1500.75), (25000.00), (99.99);
-EXPECTED OUTPUT: INSERT 0 3
-
-postgres=# SELECT transaction_id, amount FROM lab07_transactions ORDER BY transaction_id;
-EXPECTED OUTPUT:
- transaction_id |  amount
-----------------+----------
-              1 |  1500.75
-              2 | 25000.00
-              3 |    99.99
-(3 rows)
 
 5. GENERATED ALWAYS AS IDENTITY
-
-postgres=# CREATE TABLE lab07_orders (
-postgres(#     order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-postgres(#     customer_name VARCHAR(100),
-postgres(#     order_date DATE DEFAULT CURRENT_DATE
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_orders (customer_name) VALUES
-postgres-# ('Fatemeh Ebrahimi'), ('Sara Ahmadi');
-EXPECTED OUTPUT: INSERT 0 2
-
-postgres=# SELECT order_id, customer_name FROM lab07_orders ORDER BY order_id;
-EXPECTED OUTPUT:
- order_id |  customer_name
-----------+------------------
-        1 | Fatemeh Ebrahimi
-        2 | Sara Ahmadi
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:59: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 2
+ order_id |  customer_name   | total
+----------+------------------+--------
+        1 | Fatemeh Ebrahimi | 120.00
+        2 | Amina Ahmadi     |  85.50
 (2 rows)
+
 
 6. GENERATED BY DEFAULT AS IDENTITY
-
-postgres=# CREATE TABLE lab07_customers (
-postgres(#     customer_id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-postgres(#     customer_name VARCHAR(100),
-postgres(#     email VARCHAR(150)
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_customers (customer_id, customer_name, email) VALUES
-postgres-# (2001, 'Fatemeh Ebrahimi', 'fatemeh@example.com');
-EXPECTED OUTPUT: INSERT 0 1
-
-postgres=# INSERT INTO lab07_customers (customer_name, email) VALUES
-postgres-# ('Amina Rahimi', 'amina@example.com');
-EXPECTED OUTPUT: INSERT 0 1
-
-postgres=# SELECT * FROM lab07_customers ORDER BY customer_id;
-EXPECTED OUTPUT:
- customer_id |  customer_name   |        email
--------------+------------------+---------------------
-           1 | Amina Rahimi     | amina@example.com
-        2001 | Fatemeh Ebrahimi | fatemeh@example.com
-(2 rows)
-
-7. PRIMARY KEY CONSTRAINTS (UNIQUE AND NOT NULL)
-
-postgres=# CREATE TABLE lab07_departments (
-postgres(#     dept_id INTEGER PRIMARY KEY,
-postgres(#     dept_name VARCHAR(100)
-postgres(# );
-EXPECTED OUTPUT: CREATE TABLE
-
-postgres=# INSERT INTO lab07_departments VALUES
-postgres-# (1, 'Software Engineering'),
-postgres-# (2, 'Computer Science'),
-postgres-# (3, 'Mathematics');
-EXPECTED OUTPUT: INSERT 0 3
-
-postgres=# SELECT * FROM lab07_departments ORDER BY dept_id;
-EXPECTED OUTPUT:
- dept_id |      dept_name
----------+----------------------
-       1 | Software Engineering
-       2 | Computer Science
-       3 | Mathematics
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:70: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 2
+INSERT 0 1
+ customer_id |    full_name
+-------------+------------------
+           1 | Fatemeh Ebrahimi
+           2 | Sara Rahimi
+         100 | Amina Ahmadi
 (3 rows)
 
-postgres=# INSERT INTO lab07_departments VALUES (1, 'Physics');
-EXPECTED ERROR: duplicate key value violates unique constraint "lab07_departments_pkey"
-DETAIL: Key (dept_id)=(1) already exists.
 
-postgres=# INSERT INTO lab07_departments VALUES (NULL, 'Physics');
-EXPECTED ERROR: null value in column "dept_id" of relation "lab07_departments" violates not-null constraint
+7. Named primary key constraint
+psql:C:/Users/user/Downloads/Fatemeh_Lab07_Submission/Fatemeh_Lab07_Primary_Keys.sql:80: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+CREATE TABLE
+INSERT 0 3
+ department_id |   department_name
+---------------+----------------------
+             1 | Software Engineering
+             2 | Economics
+             3 | Mathematics
+(3 rows)
 
-NOTE: Both errors above are intentional demonstrations of primary-key enforcement. PostgreSQL wording may differ by version.
 
-8. AUTOMATIC INDEX CREATED FOR PRIMARY KEY
-
-postgres=# SELECT indexname FROM pg_indexes WHERE tablename = 'lab07_departments' ORDER BY indexname;
-EXPECTED OUTPUT:
-         indexname
------------------------------
- lab07_departments_pkey
-(1 row)
+8. Primary key checks (errors are intentional and commented out)
+LAB 07 COMPLETE
+postgres=#
