@@ -1,0 +1,236 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# "C:\Users\user\Downloads\Fatemeh_Lab13_Submission_FIXED\Fatemeh_Lab13_Aggregate_Functions.sql"
+postgres-# \i 'C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql'
+LAB 13 - AGGREGATE FUNCTIONS
+BEGIN
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "employee_skills" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "product_reviews" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "sales" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "products" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "sales_data" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab13_Submission_FIXED/Fatemeh_Lab13_Aggregate_Functions.sql:11: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "employees" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+CREATE TABLE
+INSERT 0 10
+CREATE TABLE
+INSERT 0 5
+CREATE TABLE
+INSERT 0 3
+CREATE TABLE
+INSERT 0 4
+CREATE TABLE
+INSERT 0 4
+CREATE TABLE
+INSERT 0 10
+INSERT 0 2
+COMMIT
+1. COUNT(): all rows, non-NULL emails, distinct departments
+ total_employees | employees_with_email | unique_departments
+-----------------+----------------------+--------------------
+              10 |                    8 |                  3
+(1 row)
+
+
+2. SUM(): salaries and sales per department
+ total_salaries
+----------------
+      641000.00
+(1 row)
+
+
+ department  | total_sales
+-------------+-------------
+ Engineering |      500.00
+ Sales       |     3000.00
+(2 rows)
+
+
+3. AVG(): overall salary and age by department
+ average_salary
+----------------
+       64100.00
+(1 row)
+
+
+ department  | avg_age
+-------------+---------
+ Engineering |   31.00
+ Sales       |   32.00
+ HR          |   36.00
+(3 rows)
+
+
+4. MIN / MAX
+ highest_salary | lowest_salary
+----------------+---------------
+       92000.00 |      46000.00
+(1 row)
+
+
+ department  | latest_hire
+-------------+-------------
+ Engineering | 2025-01-15
+ Sales       | 2024-05-19
+ HR          | 2025-02-01
+(3 rows)
+
+
+5. STRING_AGG(): names and skills
+ department  |           employee_names
+-------------+------------------------------------
+ Engineering | Ali, Amina, Lina, Mina, Omar, Sara
+ HR          | Bilal, Zara
+ Sales       | Farid, Nadia
+(3 rows)
+
+
+ employee_id |       skills
+-------------+--------------------
+           1 | PostgreSQL, Python
+           2 | Git, SQL
+           7 | Excel
+(3 rows)
+
+
+6. ARRAY_AGG(): salaries and names
+ department  |                      salary_array
+-------------+---------------------------------------------------------
+ Engineering | {58000.00,62000.00,68000.00,75000.00,85000.00,92000.00}
+ HR          | {46000.00,52000.00}
+ Sales       | {48000.00,55000.00}
+(3 rows)
+
+
+ department  |            employees
+-------------+---------------------------------
+ Engineering | {Lina,Sara,Ali,Amina,Omar,Mina}
+ HR          | {Bilal,Zara}
+ Sales       | {Farid,Nadia}
+(3 rows)
+
+
+7. Statistical aggregates
+ department  | salary_std_dev | salary_variance
+-------------+----------------+-----------------
+ Engineering |       13261.47 |    175866666.67
+ Sales       |        4949.75 |     24500000.00
+ HR          |        4242.64 |     18000000.00
+(3 rows)
+
+
+ experience_salary_correlation
+-------------------------------
+                        0.3777
+(1 row)
+
+
+8. GROUP BY one or multiple expressions
+  category   | number_of_products | total_value | average_price
+-------------+--------------------+-------------+---------------
+ Electronics |                  2 |      750.00 |        375.00
+ Books       |                  2 |       55.00 |         27.50
+(2 rows)
+
+
+ year | quarter | total_sales | total_revenue
+------+---------+-------------+---------------
+ 2025 |       1 |           2 |        700.00
+ 2025 |       3 |           1 |        650.00
+ 2026 |       1 |           1 |        200.00
+(3 rows)
+
+
+ age_group | employee_count | avg_salary
+-----------+----------------+------------
+ 30-50     |              5 |   70400.00
+ Under 30  |              5 |   57800.00
+(2 rows)
+
+
+9. HAVING filters groups after aggregation
+ department  | employee_count
+-------------+----------------
+ Engineering |              6
+(1 row)
+
+
+ product_id |     avg_rating     | review_count
+------------+--------------------+--------------
+          1 | 4.5000000000000000 |           10
+(1 row)
+
+
+10. Aggregate vs window: window preserves individual rows
+ department  |  dept_avg_salary
+-------------+--------------------
+ Engineering | 73333.333333333333
+ Sales       | 51500.000000000000
+ HR          | 49000.000000000000
+(3 rows)
+
+
+ employee_id | first_name | department  |  salary  | dept_avg_salary
+-------------+------------+-------------+----------+-----------------
+           1 | Amina      | Engineering | 75000.00 |        73333.33
+           2 | Sara       | Engineering | 85000.00 |        73333.33
+           3 | Omar       | Engineering | 62000.00 |        73333.33
+           4 | Lina       | Engineering | 92000.00 |        73333.33
+           5 | Mina       | Engineering | 68000.00 |        73333.33
+           6 | Ali        | Engineering | 58000.00 |        73333.33
+           7 | Nadia      | Sales       | 55000.00 |        51500.00
+           8 | Farid      | Sales       | 48000.00 |        51500.00
+           9 | Zara       | HR          | 52000.00 |        49000.00
+          10 | Bilal      | HR          | 46000.00 |        49000.00
+(10 rows)
+
+
+11. NULL handling
+ total_rows | non_null_emails | null_emails
+------------+-----------------+-------------
+         10 |               8 |           2
+(1 row)
+
+
+ total_bonus | avg_bonus | employees_with_bonus
+-------------+-----------+----------------------
+    20500.00 |   3416.67 |                    6
+(1 row)
+
+
+12. Combined, conditional and percentage aggregations
+ department  | employee_count | min_salary | max_salary | avg_salary | salary_std_dev
+-------------+----------------+------------+------------+------------+----------------
+ Engineering |              6 |   58000.00 |   92000.00 |   73333.33 |       13261.47
+ Sales       |              2 |   48000.00 |   55000.00 |   51500.00 |        4949.75
+ HR          |              2 |   46000.00 |   52000.00 |   49000.00 |        4242.64
+(3 rows)
+
+
+ department  | total_employees | high_earners | recent_hires
+-------------+-----------------+--------------+--------------
+ Engineering |               6 |            6 |            4
+ Sales       |               2 |            1 |            1
+ HR          |               2 |            1 |            1
+(3 rows)
+
+
+ department  | dept_count | percentage
+-------------+------------+------------
+ Engineering |          6 |      60.00
+ Sales       |          2 |      20.00
+ HR          |          2 |      20.00
+(3 rows)
+
+
+postgres-#
