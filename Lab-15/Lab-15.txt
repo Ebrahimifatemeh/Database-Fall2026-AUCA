@@ -1,0 +1,209 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \i 'C:/Users/user/Downloads/Fatemeh_Lab15/Fatemeh_Lab15_Advanced_Querying.sql'
+Pager usage is off.
+LAB 15 - ADVANCED QUERYING
+psql:C:/Users/user/Downloads/Fatemeh_Lab15/Fatemeh_Lab15_Advanced_Querying.sql:5: D-D?DoDDD?D?D~D:  Ñ?Ñ.DµD¼D° "lab15" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP SCHEMA
+CREATE SCHEMA
+SET
+CREATE TABLE
+INSERT 0 7
+CREATE TABLE
+INSERT 0 5
+CREATE TABLE
+CREATE TABLE
+INSERT 0 4
+INSERT 0 4
+CREATE TABLE
+INSERT 0 9
+01 - Scalar subquery: above average salary
+ first_name | last_name |  salary
+------------+-----------+-----------
+ Amina      | Khan      | 120000.00
+ Sara       | Ali       |  85000.00
+ Lina       | Karim     |  85000.00
+(3 rows)
+
+02 - Row subquery: same department and salary as Sara
+ first_name | last_name | department |  salary
+------------+-----------+------------+----------
+ Sara       | Ali       | IT         | 85000.00
+ Lina       | Karim     | IT         | 85000.00
+(2 rows)
+
+03 - Table subquery with IN
+ first_name | last_name
+------------+-----------
+ Sara       | Ali
+ Omar       | Rahimi
+ Lina       | Karim
+ Nadia      | Hassan
+ Farid      | Aziz
+ Mina       | Noori
+(6 rows)
+
+04 - Correlated EXISTS
+ first_name | last_name
+------------+-----------
+ Amina      | Khan
+ Sara       | Ali
+ Nadia      | Hassan
+(3 rows)
+
+05 - CTE: regional sales above 1 million
+ region_id | total_sales
+-----------+-------------
+        10 |  1160000.00
+        20 |  1150000.00
+(2 rows)
+
+06 - Recursive CTE: organization chart
+ employee_id | first_name | last_name | manager_id | depth
+-------------+------------+-----------+------------+-------
+           1 | Amina      | Khan      |            |     0
+           2 | Sara       | Ali       |          1 |     1
+           5 | Nadia      | Hassan    |          1 |     1
+           3 | Omar       | Rahimi    |          2 |     2
+           4 | Lina       | Karim     |          2 |     2
+           6 | Farid      | Aziz      |          5 |     2
+           7 | Mina       | Noori     |          5 |     2
+(7 rows)
+
+07 - UNION: unique products in warehouses
+ product_name
+--------------
+ Keyboard
+ Laptop
+ Monitor
+ Mouse
+ Webcam
+(5 rows)
+
+08 - UNION ALL: products including duplicates
+ product_name
+--------------
+ Keyboard
+ Keyboard
+ Laptop
+ Laptop
+ Monitor
+ Mouse
+ Mouse
+ Webcam
+(8 rows)
+
+09 - INTERSECT: out of stock in both warehouses
+ product_id
+------------
+          1
+          3
+(2 rows)
+
+10 - EXCEPT: products only in warehouse 1
+ product_name
+--------------
+ Monitor
+(1 row)
+
+11 - Window functions: rank salaries by department
+ first_name | last_name | department |  salary   | row_num | dept_salary_rank | dense_salary_rank |   dept_avg_salary
+------------+-----------+------------+-----------+---------+------------------+-------------------+---------------------
+ Sara       | Ali       | IT         |  85000.00 |       1 |                1 |                 1 |  80666.666666666667
+ Lina       | Karim     | IT         |  85000.00 |       2 |                1 |                 1 |  80666.666666666667
+ Omar       | Rahimi    | IT         |  72000.00 |       3 |                3 |                 2 |  80666.666666666667
+ Amina      | Khan      | Management | 120000.00 |       1 |                1 |                 1 | 120000.000000000000
+ Nadia      | Hassan    | Sales      |  67000.00 |       1 |                1 |                 1 |  59666.666666666667
+ Mina       | Noori     | Sales      |  60000.00 |       2 |                2 |                 2 |  59666.666666666667
+ Farid      | Aziz      | Sales      |  52000.00 |       3 |                3 |                 3 |  59666.666666666667
+(7 rows)
+
+12 - LAG and LEAD salary
+ department | first_name |  salary   | previous_salary | next_salary
+------------+------------+-----------+-----------------+-------------
+ IT         | Omar       |  72000.00 |                 |    85000.00
+ IT         | Lina       |  85000.00 |        85000.00 |
+ IT         | Sara       |  85000.00 |        72000.00 |    85000.00
+ Management | Amina      | 120000.00 |                 |
+ Sales      | Farid      |  52000.00 |                 |    60000.00
+ Sales      | Mina       |  60000.00 |        52000.00 |    67000.00
+ Sales      | Nadia      |  67000.00 |        60000.00 |
+(7 rows)
+
+13 - Pivot with conditional aggregation
+ product_name | year_2022 | year_2023 | year_2024
+--------------+-----------+-----------+-----------
+ Laptop       |  10000.00 |  14000.00 |  19000.00
+ Monitor      |   6000.00 |   7500.00 |   8500.00
+ Mouse        |   2500.00 |   3500.00 |   5000.00
+(3 rows)
+
+14 - Unpivot using UNION ALL and a CTE
+ product_name | year | sales_amount
+--------------+------+--------------
+ Laptop       | 2022 |     10000.00
+ Laptop       | 2023 |     14000.00
+ Laptop       | 2024 |     19000.00
+ Monitor      | 2022 |      6000.00
+ Monitor      | 2023 |      7500.00
+ Monitor      | 2024 |      8500.00
+ Mouse        | 2022 |      2500.00
+ Mouse        | 2023 |      3500.00
+ Mouse        | 2024 |      5000.00
+(9 rows)
+
+15 - FILTER and window aggregation
+ employee_id | department | total_dept_salary | avg_salary_senior
+-------------+------------+-------------------+--------------------
+           1 | Management |         120000.00 | 83400.000000000000
+           2 | IT         |         242000.00 | 83400.000000000000
+           3 | IT         |         242000.00 | 83400.000000000000
+           4 | IT         |         242000.00 | 83400.000000000000
+           5 | Sales      |         179000.00 | 83400.000000000000
+           6 | Sales      |         179000.00 | 83400.000000000000
+           7 | Sales      |         179000.00 | 83400.000000000000
+(7 rows)
+
+16 - Custom sorting with CASE
+ product_name |     status
+--------------+-----------------
+ Laptop       | High Priority
+ Laptop       | High Priority
+ Monitor      | Medium Priority
+ Keyboard     | Low Priority
+ Mouse        | Other
+(5 rows)
+
+17 - Query optimization: EXPLAIN ANALYZE
+CREATE INDEX
+CREATE INDEX
+                                                    QUERY PLAN
+-------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1.10..1.10 rows=1 width=80) (actual time=0.023..0.025 rows=3.00 loops=1)
+   Buffers: shared hit=1
+   ->  Sort  (cost=1.10..1.10 rows=1 width=80) (actual time=0.022..0.023 rows=3.00 loops=1)
+         Sort Key: salary DESC
+         Sort Method: quicksort  Memory: 25kB
+         Buffers: shared hit=1
+         ->  Seq Scan on employees  (cost=0.00..1.09 rows=1 width=80) (actual time=0.013..0.014 rows=3.00 loops=1)
+               Filter: (department = 'IT'::text)
+               Rows Removed by Filter: 4
+               Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=15 read=1
+ Planning Time: 1.349 ms
+ Execution Time: 0.043 ms
+(14 rows)
+
+LAB 15 COMPLETED - all queries executed successfully.
+postgres=#
