@@ -1,0 +1,271 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# CREATE DATABASE lab16;
+CREATE DATABASE
+postgres=# \c lab16
+You are now connected to database "lab16" as user "postgres".
+lab16=# \i 'C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql'
+LAB 16 - TRANSACTIONS AND ACID PROPERTIES
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "user_preferences" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "audit_log" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "order_items" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "orders" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "inventory" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "products" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "logs" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "customers" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "accounts" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+psql:C:/Users/user/Downloads/Fatemeh_Lab16/Fatemeh_Lab16_Transactions_ACID.sql:5: D-D?DoDDD?D?D~D:  Ñ,D°D±D»D,Ñ+D° "users" D½Dµ Ñ?ÑƒÑ%DµÑ?Ñ,D²ÑƒDµÑ,, D¿Ñ?D_D¿ÑƒÑ?DºD°DµÑ,Ñ?Ñ?
+DROP TABLE
+CREATE TABLE
+INSERT 0 2
+CREATE TABLE
+INSERT 0 1
+CREATE TABLE
+INSERT 0 2
+CREATE TABLE
+INSERT 0 2
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+1. COMMIT - transfer 100
+BEGIN
+UPDATE 1
+UPDATE 1
+COMMIT
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+2. ROLLBACK - undo transfer 500
+BEGIN
+UPDATE 1
+UPDATE 1
+ROLLBACK
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+3. ATOMICITY - order, item and inventory in one transaction
+BEGIN
+INSERT 0 1
+UPDATE 1
+COMMIT
+ order_id | customer_id | total
+----------+-------------+--------
+        1 |           1 | 250.00
+(1 row)
+
+
+ item_id | order_id | product_id | quantity
+---------+----------+------------+----------
+       1 |        1 |        101 |        2
+(1 row)
+
+
+ product_id | stock
+------------+-------
+        101 |    18
+        102 |    50
+(2 rows)
+
+
+4. CONSISTENCY - valid foreign key references
+BEGIN
+INSERT 0 1
+COMMIT
+ customer_id |       name        |        email
+-------------+-------------------+----------------------
+           1 | Existing Customer | existing@example.com
+           2 | John Doe          | john@email.com
+(2 rows)
+
+
+5. ISOLATION LEVELS - single-session syntax demonstrations
+BEGIN
+ transaction_isolation
+-----------------------
+ read uncommitted
+(1 row)
+
+
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+COMMIT
+BEGIN
+ transaction_isolation
+-----------------------
+ read committed
+(1 row)
+
+
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+COMMIT
+BEGIN
+ transaction_isolation
+-----------------------
+ repeatable read
+(1 row)
+
+
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+COMMIT
+BEGIN
+ transaction_isolation
+-----------------------
+ serializable
+(1 row)
+
+
+ account_id | owner | balance
+------------+-------+---------
+          1 | Alice | 1900.00
+          2 | Bob   | 1100.00
+(2 rows)
+
+
+COMMIT
+6. SAVEPOINT - undo one order, keep customer
+BEGIN
+INSERT 0 1
+SAVEPOINT
+INSERT 0 1
+ROLLBACK
+INSERT 0 1
+COMMIT
+ order_id | customer_id | total
+----------+-------------+--------
+        1 |           1 | 250.00
+        2 |           2 | 100.00
+        4 |           3 | 300.00
+(3 rows)
+
+
+7. MULTIPLE SAVEPOINTS
+BEGIN
+INSERT 0 1
+SAVEPOINT
+INSERT 0 1
+SAVEPOINT
+INSERT 0 1
+ROLLBACK
+INSERT 0 1
+COMMIT
+ product_id |    name    | price
+------------+------------+--------
+        101 | Laptop     | 999.99
+        102 | Mouse      |  25.99
+        103 | Keyboard   |  79.99
+        104 | Monitor    | 199.99
+        106 | Headphones |  59.99
+(5 rows)
+
+
+8. RELEASE SAVEPOINT
+BEGIN
+INSERT 0 1
+SAVEPOINT
+INSERT 0 1
+RELEASE
+COMMIT
+ log_id |      message
+--------+-------------------
+      1 | Starting process
+      2 | Process completed
+(2 rows)
+
+
+9. SHORT TRANSACTION
+BEGIN
+UPDATE 1
+INSERT 0 1
+COMMIT
+10. INSUFFICIENT FUNDS HANDLING - safe DO block
+BEGIN
+DO
+COMMIT
+11. COMPLEX TRANSACTION WITH SAVEPOINT
+BEGIN
+INSERT 0 1
+SAVEPOINT
+INSERT 0 1
+INSERT 0 1
+COMMIT
+12. MONITOR LOCKS (current database)
+  pid  | usename  | state  |  locktype  |      mode       | granted
+-------+----------+--------+------------+-----------------+---------
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | virtualxid | ExclusiveLock   | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+ 17852 | postgres | active | relation   | AccessShareLock | t
+(9 rows)
+
+
+13. EXPLICIT TRANSACTION ACROSS RELATED TABLES
+BEGIN
+INSERT 0 1
+INSERT 0 1
+COMMIT
+   name   | theme
+----------+-------
+ Jane Doe | dark
+(1 row)
+
+
+14. FINAL CHECKS
+ total_account_balance | orders_count | order_items_count
+-----------------------+--------------+-------------------
+               3000.00 |            4 |                 4
+(1 row)
+
+
+LAB 16 COMPLETED SUCCESSFULLY
+lab16=#
