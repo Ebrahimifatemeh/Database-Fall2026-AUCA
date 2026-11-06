@@ -1,0 +1,67 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \i 'C:/Users/user/Downloads/First_SQL_Query_Solution.sql'
+psql:C:/Users/user/Downloads/First_SQL_Query_Solution.sql:11: ERROR:  character with byte sequence 0xd0 0x97 in encoding "UTF8" has no equivalent in encoding "WIN1252"
+INSERT 0 0
+  name   |        email
+---------+---------------------
+ Alymbek | alymbek@example.com
+ Timur   | timur@example.com
+ Beka    | beka@example.com
+(3 rows)
+
+
+ student_id |  name   |        email        | faculty
+------------+---------+---------------------+---------
+          1 | Alymbek | alymbek@example.com | COMSEH
+          2 | Timur   | timur@example.com   | MED
+          3 | Beka    | beka@example.com    | MAT
+(3 rows)
+
+
+ student_id | faculty
+------------+---------
+          1 | COMSEH
+          2 | MED
+          3 | MAT
+(3 rows)
+
+
+ name  |       email
+-------+-------------------
+ Timur | timur@example.com
+(1 row)
+
+
+  name   |        email
+---------+---------------------
+ Alymbek | alymbek@example.com
+ Beka    | beka@example.com
+ Timur   | timur@example.com
+(3 rows)
+
+
+  name   |        email
+---------+---------------------
+ Alymbek | alymbek@example.com
+ Timur   | timur@example.com
+(2 rows)
+
+
+  name   | faculty
+---------+---------
+ Alymbek | COMSEH
+(1 row)
+
+
+postgres=#
